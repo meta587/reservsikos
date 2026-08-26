@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login - Reservasi Kos</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
     <div class="w-full max-w-md">
@@ -17,6 +18,7 @@
                 <p class="text-gray-500 text-sm mt-1">Silahkan login untuk melanjutkan</p>
             </div>
 
+            
             <!-- Pesan Error -->
             @if(session('error'))
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
