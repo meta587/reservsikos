@@ -20,8 +20,14 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->date('tanggal_masuk');
-            $table->date('tanggal_keluar');
-            $table->integer('lama_tinggal');
+            $table->date('tanggal_keluar')->nullable();
+
+            $table->enum('status', [
+                'Pending',
+                'Aktif',
+                'Selesai',
+                'Dibatalkan'
+            ])->default('Pending');
 
             $table->timestamps();
         });
@@ -31,4 +37,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('reservasis');
     }
-};  
+};

@@ -64,5 +64,8 @@ Route::prefix('admin')
 
         Route::resource('pembayaran', PembayaranController::class)
             ->names('pembayaran');
+            
+        Route::resource('reservasi', ReservasiController::class)
+            ->names('reservasi');
 
     });

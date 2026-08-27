@@ -6,14 +6,13 @@
     <title>Login | Reservasi Kos</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    @vite(['resources/css/app.css']) <!-- jika pakai Vite -->
+    @vite(['resources/css/app.css']) 
     <style>
-        /* sama seperti kode CSS sebelumnya, bisa disimpan di file terpisah */
-        /* Saya singkat di sini, tapi Anda bisa copy-paste CSS dari kode sebelumnya */
+       
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Inter',sans-serif; background:#f4f7fc; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem; }
         .login-card { background:#fff; border-radius:28px; box-shadow:0 20px 60px rgba(0,20,40,0.08); padding:2.5rem 2.8rem 2rem; max-width:420px; width:100%; }
-        ... (salin semua CSS dari jawaban sebelumnya) ...
+       
     </style>
 </head>
 <body>
@@ -24,7 +23,7 @@
             <span class="subtitle"><i class="fas fa-building"></i> Reservasi Kos</span>
         </div>
 
-        <form class="login-form" method="POST" action="{{ route('login') }}">
+        <form class="login-form" method="POST" action="{{ route('admin.login.process') }}">
             @csrf
 
             <div class="form-group">
@@ -66,7 +65,7 @@
     </div>
 
     <script>
-        // Toggle password (sama seperti sebelumnya)
+        
         const toggleBtn = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
         toggleBtn.addEventListener('click', function() {

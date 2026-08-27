@@ -95,7 +95,7 @@ class AdminController extends Controller
         $user->save();
 
         return redirect()
-            ->route('admin.admin.index')
+            ->route('admin.administrator.index')
             ->with('success', 'Admin berhasil diperbarui.');
     }
 
@@ -106,7 +106,7 @@ class AdminController extends Controller
         $user->delete();
 
         return redirect()
-            ->route('admin.admin.index')
+            ->route('admin.administrator.index')
             ->with('success', 'Admin berhasil dihapus.');
     }
 }
