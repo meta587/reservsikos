@@ -14,11 +14,7 @@ class Kamar extends Model
         'tipe_kamar',
         'harga',
         'fasilitas',
-        'status',
-    ];
-
-    protected $casts = [
-        'harga' => 'decimal:2',
+        'status_kamar',
     ];
 
     public function penghunis()

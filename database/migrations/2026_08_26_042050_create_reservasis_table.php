@@ -6,22 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('reservasis', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('penghuni_id')
+                ->constrained('penghunis')
+                ->cascadeOnDelete();
+
+            $table->foreignId('kamar_id')
+                ->constrained('kamars')
+                ->cascadeOnDelete();
+
+            $table->date('tanggal_masuk');
+            $table->date('tanggal_keluar');
+            $table->integer('lama_tinggal');
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('reservasis');
     }
-};
+};  

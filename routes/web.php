@@ -1,26 +1,68 @@
 <?php
 
-use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
-// Halaman utama redirect ke login
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KamarController;
+use App\Http\Controllers\PenghuniController;
+use App\Http\Controllers\ReservasiController;
+use App\Http\Controllers\PembayaranController;
+
+
+
+
+// Halaman awal
 Route::get('/', function () {
-    return redirect('/login');
+    return redirect()->route('admin.login');
 });
 
-// Route Login
-Route::get('/login', [LoginController::class, 'index'])->name('login');
-Route::post('/login', [LoginController::class, 'proses'])->name('login.proses');
 
-// Route Logout
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Route Dashboard (harus login dulu)
-Route::middleware(['auth'])->group(function () {
 
-    Route::get('/admin/dashboard', [LoginController::class, 'adminDashboard'])
-        ->name('admin.dashboard');
+Route::prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    Route::get('/penghuni/dashboard', [LoginController::class, 'penghuniDashboard'])
-        ->name('penghuni.dashboard');
-});
+        // Menampilkan halaman login
+        Route::get('/login', function () {
+            return view('auth.login');
+        })->name('login');
+
+
+        // Proses login
+        Route::post('/login', [AdminController::class, 'login'])
+            ->name('login.process');
+
+
+        // Logout
+        Route::post('/logout', [AdminController::class, 'logout'])
+            ->name('logout');
+
+        Route::get('/dashboard', [HomeController::class, 'index'])
+            ->name('dashboard');
+
+        Route::get('/profil', [ProfilController::class, 'index'])
+            ->name('profil');
+
+        Route::post('/profil', [ProfilController::class, 'save'])
+            ->name('profil.save');
+
+        Route::resource('administrator', AdminController::class)
+            ->names('administrator');
+
+        Route::resource('kamar', KamarController::class)
+            ->names('kamar');
+
+        Route::resource('penghuni', PenghuniController::class)
+            ->names('penghuni');
+        
+
+        Route::resource('reservasi', ReservasiController::class)
+            ->names('reservasi');
+
+        Route::resource('pembayaran', PembayaranController::class)
+            ->names('pembayaran');
+
+    });

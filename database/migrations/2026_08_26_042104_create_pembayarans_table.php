@@ -6,22 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('pembayarans', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('reservasi_id')
+                ->constrained('reservasis')
+                ->cascadeOnDelete();
+
+            $table->date('tanggal_pembayaran');
+            $table->decimal('jumlah_pembayaran', 12, 2);
+            $table->string('metode_pembayaran', 50);
+            $table->string('status_pembayaran', 50);
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('pembayarans');
     }
-};
+};    

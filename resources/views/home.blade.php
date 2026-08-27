@@ -1,23 +1,51 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Reservasi Kos</title>
+</head>
+<body>
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+    <h1>Dashboard Reservasi Kos</h1>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+    <p>Selamat datang di Aplikasi Reservasi Kos</p>
 
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
+    <hr>
+
+    <h3>Menu</h3>
+
+    <ul>
+        <li>
+            <a href="{{ route('admin.kamar.index') }}">
+                Data Kamar
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ route('admin.penghuni.index') }}">
+                Data Penghuni
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ route('admin.reservasi.index') }}">
+                Data Reservasi
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ route('admin.pembayaran.index') }}">
+                Data Pembayaran
+            </a>
+        </li>
+
+        <li>
+            <a href="{{ route('admin.profil') }}">
+                Profil
+            </a>
+        </li>
+    </ul>
+
+</body>
+</html>
