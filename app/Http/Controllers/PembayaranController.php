@@ -40,18 +40,18 @@ class PembayaranController extends Controller
             'status_pembayaran' => 'required',
         ]);
 
-        Pembayaran::create(
-            $request->all()
-        );
+        Pembayaran::create([
+            'reservasi_id' => $request->reservasi_id,
+            'tanggal_pembayaran' => $request->tanggal_pembayaran,
+            'jumlah_pembayaran' => $request->jumlah_pembayaran,
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'status_pembayaran' => $request->status_pembayaran,
+        ]);
 
         return redirect()
             ->route('admin.pembayaran.index')
-            ->with(
-                'success',
-                'Pembayaran berhasil ditambahkan.'
-            );
+            ->with('success', 'Pembayaran berhasil ditambahkan.');
     }
-
     public function show(string $id)
     {
         $pembayaran = Pembayaran::with(
