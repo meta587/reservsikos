@@ -5,27 +5,53 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+    // LOGIN
+   public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    // EMAIL BELUM ADA → BUAT AKUN PENGHUNI OTOMATIS
+    if (!$user) {
+
+        $user = User::create([
+            'name' => explode('@', $request->email)[0],
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'penghuni',
         ]);
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return redirect()->route('admin.dashboard');
-        }
-
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->withInput();
     }
 
+    // LOGIN
+    Auth::login($user);
+
+    $request->session()->regenerate();
+
+    // ADMIN
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    // PENGHUNI
+    if ($user->role === 'penghuni') {
+        return redirect()->route('penghuni.dashboard');
+    }
+
+    return back()->withErrors([
+        'email' => 'Role tidak ditemukan.',
+    ]);
+}
+
+
+    // LOGOUT
     public function logout(Request $request)
     {
         Auth::logout();
@@ -36,30 +62,37 @@ class AdminController extends Controller
         return redirect()->route('admin.login');
     }
 
+
+    // DATA ADMIN
     public function index()
     {
-        $users = User::all();
+        $users = User::where('role', 'admin')->get();
 
         return view('pages.admin.index', compact('users'));
     }
 
+
+    // FORM TAMBAH ADMIN
     public function create()
     {
         return view('pages.admin.create');
     }
 
+
+    // SIMPAN ADMIN
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => Hash::make($request->password),
+            'role' => 'admin',
         ]);
 
         return redirect()
@@ -67,23 +100,29 @@ class AdminController extends Controller
             ->with('success', 'Admin berhasil ditambahkan.');
     }
 
+
+    // DETAIL ADMIN
     public function show(string $id)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('role', 'admin')->findOrFail($id);
 
         return view('pages.admin.show', compact('user'));
     }
 
+
+    // FORM EDIT ADMIN
     public function edit(string $id)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('role', 'admin')->findOrFail($id);
 
         return view('pages.admin.edit', compact('user'));
     }
 
+
+    // UPDATE ADMIN
     public function update(Request $request, string $id)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('role', 'admin')->findOrFail($id);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -92,6 +131,7 @@ class AdminController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
+
         $user->save();
 
         return redirect()
@@ -99,9 +139,11 @@ class AdminController extends Controller
             ->with('success', 'Admin berhasil diperbarui.');
     }
 
+
+    // HAPUS ADMIN
     public function destroy(string $id)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('role', 'admin')->findOrFail($id);
 
         $user->delete();
 

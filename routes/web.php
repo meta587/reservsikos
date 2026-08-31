@@ -9,63 +9,89 @@ use App\Http\Controllers\KamarController;
 use App\Http\Controllers\PenghuniController;
 use App\Http\Controllers\ReservasiController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\RegisterController;
 
 
+// =====================================
+// HALAMAN AWAL
+// =====================================
 
-
-// Halaman awal
 Route::get('/', function () {
     return redirect()->route('admin.login');
 });
 
 
-
+// =====================================
+// ADMIN
+// =====================================
 
 Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-        // Menampilkan halaman login
+        // LOGIN
         Route::get('/login', function () {
             return view('auth.login');
         })->name('login');
 
-
-        // Proses login
+        // PROSES LOGIN
         Route::post('/login', [AdminController::class, 'login'])
             ->name('login.process');
 
-
-        // Logout
+        // LOGOUT
         Route::post('/logout', [AdminController::class, 'logout'])
             ->name('logout');
 
+        // DASHBOARD ADMIN
         Route::get('/dashboard', [HomeController::class, 'index'])
             ->name('dashboard');
 
+        // PROFIL
         Route::get('/profil', [ProfilController::class, 'index'])
             ->name('profil');
 
         Route::post('/profil', [ProfilController::class, 'save'])
             ->name('profil.save');
 
+        // ADMINISTRATOR
         Route::resource('administrator', AdminController::class)
             ->names('administrator');
 
+        // KAMAR
         Route::resource('kamar', KamarController::class)
             ->names('kamar');
 
+        // PENGHUNI
         Route::resource('penghuni', PenghuniController::class)
             ->names('penghuni');
-        
 
+        // RESERVASI
         Route::resource('reservasi', ReservasiController::class)
             ->names('reservasi');
 
+        // PEMBAYARAN
         Route::resource('pembayaran', PembayaranController::class)
             ->names('pembayaran');
-            
-        Route::resource('reservasi', ReservasiController::class)
-            ->names('reservasi');
-
     });
+
+
+// =====================================
+// REGISTER
+// =====================================
+
+Route::get('/register', [RegisterController::class, 'index'])
+    ->name('register');
+
+Route::post('/register', [RegisterController::class, 'register'])
+    ->name('register.process');
+
+
+// =====================================
+// DASHBOARD PENGHUNI
+// =====================================
+
+Route::get('/penghuni/dashboard', function () { return view('penghuni.dashboard');
+})->name('penghuni.dashboard');
+
+
+?>
