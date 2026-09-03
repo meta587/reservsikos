@@ -22,56 +22,87 @@ Route::get('/', function () {
 
 
 // =====================================
-// ADMIN
+// LOGIN ADMIN
 // =====================================
 
 Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-        // LOGIN
+        // Halaman Login
         Route::get('/login', function () {
             return view('auth.login');
         })->name('login');
 
-        // PROSES LOGIN
+        // Proses Login
         Route::post('/login', [AdminController::class, 'login'])
             ->name('login.process');
+    });
 
-        // LOGOUT
-        Route::post('/logout', [AdminController::class, 'logout'])
-            ->name('logout');
 
-        // DASHBOARD ADMIN
+// =====================================
+// ADMIN SETELAH LOGIN
+// =====================================
+
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware('auth')
+    ->group(function () {
+
+        // Dashboard
         Route::get('/dashboard', [HomeController::class, 'index'])
             ->name('dashboard');
 
+
+        // =================================
         // PROFIL
+        // =================================
+
         Route::get('/profil', [ProfilController::class, 'index'])
             ->name('profil');
 
         Route::post('/profil', [ProfilController::class, 'save'])
             ->name('profil.save');
 
-        // ADMINISTRATOR
-        Route::resource('administrator', AdminController::class)
-            ->names('administrator');
 
+        // =================================
         // KAMAR
+        // =================================
+
         Route::resource('kamar', KamarController::class)
             ->names('kamar');
 
+
+        // =================================
         // PENGHUNI
+        // =================================
+
         Route::resource('penghuni', PenghuniController::class)
             ->names('penghuni');
 
+
+        // =================================
         // RESERVASI
+        // =================================
+
         Route::resource('reservasi', ReservasiController::class)
             ->names('reservasi');
 
+
+        // =================================
         // PEMBAYARAN
+        // =================================
+
         Route::resource('pembayaran', PembayaranController::class)
             ->names('pembayaran');
+
+
+        // =================================
+        // LOGOUT
+        // =================================
+
+        Route::post('/logout', [AdminController::class, 'logout'])
+            ->name('logout');
     });
 
 
@@ -90,8 +121,6 @@ Route::post('/register', [RegisterController::class, 'register'])
 // DASHBOARD PENGHUNI
 // =====================================
 
-Route::get('/penghuni/dashboard', function () { return view('penghuni.dashboard');
+Route::get('/penghuni/dashboard', function () {
+    return view('penghuni.dashboard');
 })->name('penghuni.dashboard');
-
-
-?>

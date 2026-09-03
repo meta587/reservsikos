@@ -9,61 +9,91 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    // =====================================
     // LOGIN
-   public function login(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
+    // =====================================
 
-    $user = User::where('email', $request->email)->first();
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-    // EMAIL BELUM ADA → BUAT AKUN PENGHUNI OTOMATIS
-    if (!$user) {
+        $user = User::where('email', $request->email)->first();
 
-        $user = User::create([
-            'name' => explode('@', $request->email)[0],
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'penghuni',
+        // EMAIL BELUM ADA
+        // BUAT AKUN PENGHUNI OTOMATIS
+        if (!$user) {
+
+            $user = User::create([
+                'name' => explode('@', $request->email)[0],
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'penghuni',
+            ]);
+
+            Auth::login($user);
+
+            $request->session()->regenerate();
+
+            return redirect()->route('penghuni.dashboard');
+        }
+
+        // CEK PASSWORD
+        if (!Hash::check($request->password, $user->password)) {
+
+            return back()
+                ->withErrors([
+                    'email' => 'Email atau password salah.',
+                ])
+                ->withInput($request->only('email'));
+        }
+
+        // LOGIN
+        Auth::login($user);
+
+        $request->session()->regenerate();
+
+        // ADMIN
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        // PENGHUNI
+        if ($user->role === 'penghuni') {
+            return redirect()->route('penghuni.dashboard');
+        }
+
+        // ROLE TIDAK ADA
+        Auth::logout();
+
+        return back()->withErrors([
+            'email' => 'Role tidak ditemukan.',
         ]);
     }
 
-    // LOGIN
-    Auth::login($user);
 
-    $request->session()->regenerate();
-
-    // ADMIN
-    if ($user->role === 'admin') {
-        return redirect()->route('admin.dashboard');
-    }
-
-    // PENGHUNI
-    if ($user->role === 'penghuni') {
-        return redirect()->route('penghuni.dashboard');
-    }
-
-    return back()->withErrors([
-        'email' => 'Role tidak ditemukan.',
-    ]);
-}
-
-
+    // =====================================
     // LOGOUT
+    // =====================================
+
     public function logout(Request $request)
     {
         Auth::logout();
 
         $request->session()->invalidate();
+
         $request->session()->regenerateToken();
 
         return redirect()->route('admin.login');
     }
 
 
+    // =====================================
     // DATA ADMIN
+    // =====================================
+
     public function index()
     {
         $users = User::where('role', 'admin')->get();
@@ -72,14 +102,15 @@ class AdminController extends Controller
     }
 
 
+    // =====================================
     // FORM TAMBAH ADMIN
+    // =====================================
+
     public function create()
     {
         return view('pages.admin.create');
     }
 
-
-    // SIMPAN ADMIN
     public function store(Request $request)
     {
         $request->validate([
@@ -100,29 +131,26 @@ class AdminController extends Controller
             ->with('success', 'Admin berhasil ditambahkan.');
     }
 
-
-    // DETAIL ADMIN
     public function show(string $id)
     {
-        $user = User::where('role', 'admin')->findOrFail($id);
+        $user = User::where('role', 'admin')
+            ->findOrFail($id);
 
         return view('pages.admin.show', compact('user'));
     }
 
-
-    // FORM EDIT ADMIN
     public function edit(string $id)
     {
-        $user = User::where('role', 'admin')->findOrFail($id);
+        $user = User::where('role', 'admin')
+            ->findOrFail($id);
 
         return view('pages.admin.edit', compact('user'));
     }
 
-
-    // UPDATE ADMIN
     public function update(Request $request, string $id)
     {
-        $user = User::where('role', 'admin')->findOrFail($id);
+        $user = User::where('role', 'admin')
+            ->findOrFail($id);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -139,11 +167,10 @@ class AdminController extends Controller
             ->with('success', 'Admin berhasil diperbarui.');
     }
 
-
-    // HAPUS ADMIN
     public function destroy(string $id)
     {
-        $user = User::where('role', 'admin')->findOrFail($id);
+        $user = User::where('role', 'admin')
+            ->findOrFail($id);
 
         $user->delete();
 
