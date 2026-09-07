@@ -1,129 +1,86 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
     <title>@yield('title', 'Reservasi Kos')</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    @stack('styles')
+
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+
 </head>
 
-<body>
+<body id="page-top">
 
-    <div class="d-flex">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
 
-        <!-- SIDEBAR -->
-        <div class="bg-primary text-white p-4"
-             style="width: 220px; min-height: 100vh;">
+        <!-- Sidebar -->
+        @include('layouts.inc.sidebar')
+        <!-- End of Sidebar -->
 
-            <h4 class="fw-bold mb-4">
-                RESERVASI KOS
-            </h4>
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
 
-            <div class="mb-3">
-                <a href="{{ route('admin.dashboard') }}"
-                   class="text-white text-decoration-none">
-                    🏠 Dashboard
-                </a>
-            </div>
+            <!-- Main Content -->
+            <div id="content">
 
-            <div class="mb-3">
-                <a href="{{ route('admin.kamar.index') }}"
-                   class="text-white text-decoration-none">
-                    ▣ Kamar
-                </a>
-            </div>
+                <!-- Topbar -->
+                @include('layouts.inc.navbar')
+                <!-- End of Topbar -->
 
-            <div class="mb-3">
-                <a href="{{ route('admin.penghuni.index') }}"
-                   class="text-white text-decoration-none">
-                    ♙ Penghuni
-                </a>
-            </div>
-
-            <div class="mb-3">
-                <a href="{{ route('admin.reservasi.index') }}"
-                   class="text-white text-decoration-none">
-                    ▣ Reservasi
-                </a>
-            </div>
-
-            <div class="mb-3">
-                <a href="{{ route('admin.pembayaran.index') }}"
-                   class="text-white text-decoration-none">
-                    ▣ Pembayaran
-                </a>
-            </div>
-
-        </div>
-
-
-        <!-- CONTENT -->
-        <div class="flex-grow-1">
-
-            <!-- TOPBAR -->
-            <div class="border-bottom p-3 d-flex justify-content-end">
-
-                <div class="dropdown">
-
-                    <button
-                        class="btn btn-light dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-
-                        👤 {{ Auth::user()->name }}
-
-                    </button>
-
-                    <ul class="dropdown-menu dropdown-menu-end">
-
-                        <!-- PROFILE -->
-                        <li>
-                            <a class="dropdown-item"
-                               href="{{ route('admin.profil') }}">
-                                👤 Profile
-                            </a>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <!-- LOGOUT -->
-                        <li>
-                            <form action="{{ route('admin.logout') }}"
-                                  method="POST">
-
-                                @csrf
-
-                                <button type="submit"
-                                        class="dropdown-item">
-                                    🚪 Logout
-                                </button>
-
-                            </form>
-                        </li>
-
-                    </ul>
-
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    @yield('content')
                 </div>
+                <!-- /.container-fluid -->
 
             </div>
+            <!-- End of Main Content -->
 
-
-            <!-- HALAMAN -->
-            <div class="p-4">
-                @yield('content')
-            </div>
+            <!-- Footer -->
+            @include('layouts.inc.footer')
+            <!-- End of Footer -->
 
         </div>
+        <!-- End of Content Wrapper -->
 
     </div>
+    <!-- End of Page Wrapper -->
 
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
+
+    @stack('scripts')
 
 </body>
+
 </html>

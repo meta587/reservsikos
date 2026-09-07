@@ -1,71 +1,109 @@
 @extends('layouts.auth')
 
-@section('title', 'Login | Reservasi Kos')
+@section('title','Login | Reservasi Kos')
 
 @section('content')
+<div class="container">
 
-<div class="container mt-4">
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
 
-    <div class="card mx-auto border-0 shadow-sm" style="max-width: 580px;">
+        <div class="col-lg-6 col-md-9">
 
-        <div class="card-body px-5 py-4">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
 
-            <div class="text-center mb-5">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="p-5">
 
-                <div class="mb-2">
-                    <i class="bi bi-house-door-fill"
-                       style="font-size: 100px; color: #dce3ff;">
-                    </i>
+                                <div class="text-center mb-5">
+
+                                    <div class="mb-2">
+                                        <i class="bi bi-house-door-fill"
+                                           style="font-size: 100px; color: #dce3ff;">
+                                        </i>
+                                    </div>
+
+                                    <h1 class="h4 text-gray-900 mb-4">
+                                        Reservasi Kos
+                                    </h1>
+
+                                </div>
+
+                                <form method="POST"
+                                      action="{{ route('admin.login') }}"
+                                      class="user">
+
+                                    @csrf
+
+                                    <div class="form-group mb-4">
+
+                                        <label class="form-label fw-bold fs-5">
+                                            Email
+                                        </label>
+
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            id="email"
+                                            class="form-control form-control-user @error('email') is-invalid @enderror"
+                                            value="{{ old('email') }}"
+                                            placeholder="Masukan email"
+                                            required
+                                        >
+
+                                        @error('email')
+                                            <div class="invalid-feedback d-block">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                    </div>
+
+                                    <div class="form-group mb-4">
+
+                                        <label class="form-label fw-bold fs-5">
+                                            Password
+                                        </label>
+
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            id="password"
+                                            class="form-control form-control-user @error('password') is-invalid @enderror"
+                                            placeholder="Masukan password"
+                                            required
+                                        >
+
+                                        @error('password')
+                                            <div class="invalid-feedback d-block">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary btn-user btn-block w-100">
+
+                                        LOGIN
+
+                                    </button>
+
+                                </form>
+
+                                <div class="text-center text-secondary mt-4">
+                                    <small>© 2025 reservasi kos</small>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-
-                <h3 class="fw-bold">
-                    Reservasi Kos
-                </h3>
-
-            </div>
-
-            <form method="POST" action="{{ route('admin.login') }}">
-
-                @csrf
-
-                <div class="mb-4">
-                    <label class="form-label fw-bold fs-5">
-                        Email
-                    </label>
-
-                    <input
-                        type="email"
-                        name="email"
-                        class="form-control bg-light border-0 py-2"
-                        placeholder="Masukan email"
-                        required
-                    >
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label fw-bold fs-5">
-                        Password
-                    </label>
-
-                    <input
-                        type="password"
-                        name="password"
-                        class="form-control bg-light border-0 py-2"
-                        placeholder="Masukan password"
-                        required
-                    >
-                </div>
-
-                <button
-                    type="submit"
-                    class="btn btn-primary w-100 py-2">
-                    LOGIN
-                </button>
-
-            </form>
-
-            <div class="text-center text-secondary mt-4">
-                <small>© 2025 reservasi kos</small>
             </div>
 
         </div>
@@ -73,5 +111,4 @@
     </div>
 
 </div>
-
 @endsection
