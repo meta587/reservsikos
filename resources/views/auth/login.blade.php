@@ -68,14 +68,18 @@
                                             Password
                                         </label>
 
-                                        <input
-                                            type="password"
-                                            name="password"
-                                            id="password"
-                                            class="form-control form-control-user @error('password') is-invalid @enderror"
-                                            placeholder="Masukan password"
-                                            required
-                                        >
+                                      <div class="password-wrapper">
+                                        <input 
+                                                type="password" 
+                                                name="password" 
+                                                id="password" 
+                                                class="form-control form-control-user @error('password') is-invalid @enderror" 
+                                                placeholder="Masukan password" 
+                                                required >
+                                        <button type="button" id="togglePassword" class="toggle-password">
+                                                👁️
+                                        </button>
+                                        </div>
 
                                         @error('password')
                                             <div class="invalid-feedback d-block">

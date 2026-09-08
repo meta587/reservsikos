@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    // =====================================
+    
     // LOGIN
-    // =====================================
+    
 
     public function login(Request $request)
     {
@@ -22,8 +22,6 @@ class AdminController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // EMAIL BELUM ADA
-        // BUAT AKUN PENGHUNI OTOMATIS
         if (!$user) {
 
             $user = User::create([
@@ -72,12 +70,8 @@ class AdminController extends Controller
             'email' => 'Role tidak ditemukan.',
         ]);
     }
-
-
-    // =====================================
+  
     // LOGOUT
-    // =====================================
-
     public function logout(Request $request)
     {
         Auth::logout();
@@ -88,24 +82,16 @@ class AdminController extends Controller
 
         return redirect()->route('admin.login');
     }
-
-
-    // =====================================
+    
     // DATA ADMIN
-    // =====================================
-
     public function index()
     {
         $users = User::where('role', 'admin')->get();
 
         return view('pages.admin.index', compact('users'));
     }
-
-
-    // =====================================
+    
     // FORM TAMBAH ADMIN
-    // =====================================
-
     public function create()
     {
         return view('pages.admin.create');
