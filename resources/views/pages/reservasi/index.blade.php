@@ -1,378 +1,224 @@
-@extends('layouts.auth')
+@extends('layouts.app')
 
 @section('title', 'Data Reservasi | Reservasi Kos')
 
+@section('page-title', 'Data Reservasi')
+
 @section('content')
 
-<div class="container-fluid py-3">
+{{-- PESAN SUKSES --}}
+@if(session('success'))
 
-    <div class="row">
+    <div class="alert alert-success alert-dismissible fade show"
+         role="alert">
 
-        {{-- SIDEBAR --}}
-        <div class="col-md-2">
+        {{ session('success') }}
 
-            <div class="bg-primary text-white rounded-3 min-vh-100 p-3">
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
 
-                <h5 class="mb-4">
-                    Reservasi Kos
-                </h5>
+    </div>
 
-                <div class="d-grid gap-2">
+@endif
 
-                    {{-- DASHBOARD --}}
-                    <a href="{{ route('admin.dashboard') }}"
-                       class="btn btn-primary text-white text-start">
-                        🏠 Dashboard
-                    </a>
 
-                    {{-- KAMAR --}}
-                    <a href="{{ route('admin.kamar.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ▣ Kamar
-                    </a>
+{{-- TOMBOL TAMBAH --}}
+<div class="d-flex justify-content-end mb-3">
 
-                    {{-- PENGHUNI --}}
-                    <a href="{{ route('admin.penghuni.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ♙ Penghuni
-                    </a>
+    <a href="{{ route('admin.reservasi.create') }}"
+       class="btn btn-primary">
 
-                    {{-- RESERVASI --}}
-                    <a href="{{ route('admin.reservasi.index') }}"
-                       class="btn btn-light text-primary text-start">
-                        ▣ Reservasi
-                    </a>
+        + &nbsp; Tambah Reservasi
 
-                    {{-- PEMBAYARAN --}}
-                    <a href="{{ route('admin.pembayaran.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ▣ Pembayaran
-                    </a>
+    </a>
 
-                </div>
+</div>
 
-            </div>
 
-        </div>
+{{-- TABEL --}}
+<div class="card border-0 shadow-sm">
 
+    <div class="card-body">
 
-        {{-- KONTEN UTAMA --}}
-        <div class="col-md-10">
+        <div class="table-responsive">
 
-            {{-- HEADER --}}
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <table class="table table-bordered align-middle mb-0">
 
-                <div>
+                <thead class="table-light">
 
-                    <h2 class="fw-bold mb-1">
-                        Data Reservasi
-                    </h2>
+                    <tr>
 
-                    <small class="text-secondary">
+                        <th class="text-center">
+                            No
+                        </th>
 
-                        🏠 Dashboard
+                        <th>
+                            Penghuni
+                        </th>
 
-                        <span class="mx-2">›</span>
+                        <th>
+                            Kamar
+                        </th>
 
-                        Reservasi
+                        <th>
+                            Tanggal Masuk
+                        </th>
 
-                    </small>
+                        <th>
+                            Tanggal Keluar
+                        </th>
 
-                </div>
+                        <th>
+                            Status
+                        </th>
 
+                        <th class="text-center">
+                            Aksi
+                        </th>
 
-                {{-- PROFIL ADMIN --}}
-                <div class="dropdown">
+                    </tr>
 
-                    <button
-                        class="btn btn-light dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown">
+                </thead>
 
-                        👤 Admin
 
-                    </button>
+                <tbody>
 
-                    <ul class="dropdown-menu dropdown-menu-end">
+                    @forelse($reservasis as $reservasi)
 
-                        <li>
+                        <tr>
+                            <td class="text-center">
+                                {{ $loop->iteration }}
+                            </td>
 
-                            <a class="dropdown-item"
-                               href="{{ route('admin.profil') }}">
+                            <td>
+                                {{ $reservasi->penghuni->nama ?? '-' }}
+                            </td>
+                           
+                            <td>
+                                {{ $reservasi->kamar->nomor_kamar ?? '-' }}
+                            </td>
 
-                                Profil
+                            <td>
+                                {{ date('d-m-Y', strtotime($reservasi->tanggal_masuk)) }}
+                            </td>
+                            
+                            <td>
 
-                            </a>
+                                @if($reservasi->tanggal_keluar)
 
-                        </li>
+                                    {{ date('d-m-Y', strtotime($reservasi->tanggal_keluar)) }}
 
-                        <li>
+                                @else
 
-                            <hr class="dropdown-divider">
+                                    -
 
-                        </li>
+                                @endif
 
-                        <li>
+                            </td>
 
-                            <form method="POST"
-                                  action="{{ route('admin.logout') }}">
 
-                                @csrf
+                            {{-- STATUS --}}
+                            <td>
 
-                                <button
-                                    type="submit"
-                                    class="dropdown-item text-danger">
+                                @if($reservasi->status == 'Pending')
 
-                                    Logout
+                                    <span class="badge bg-warning text-dark">
+                                        Pending
+                                    </span>
 
-                                </button>
+                                @elseif($reservasi->status == 'Aktif')
 
-                            </form>
+                                    <span class="badge bg-success">
+                                        Aktif
+                                    </span>
 
-                        </li>
+                                @elseif($reservasi->status == 'Selesai')
 
-                    </ul>
+                                    <span class="badge bg-info text-dark">
+                                        Selesai
+                                    </span>
 
-                </div>
+                                @elseif($reservasi->status == 'Dibatalkan')
 
-            </div>
+                                    <span class="badge bg-danger">
+                                        Dibatalkan
+                                    </span>
 
+                                @endif
 
-            {{-- PESAN SUKSES --}}
-            @if(session('success'))
+                            </td>
 
-                <div class="alert alert-success alert-dismissible fade show"
-                     role="alert">
 
-                    {{ session('success') }}
+                            {{-- AKSI --}}
+                            <td class="text-center">
 
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="alert">
-                    </button>
+                                <div class="d-flex justify-content-center gap-2">
 
-                </div>
+                                    {{-- DETAIL --}}
+                                    <a href="{{ route('admin.reservasi.show', $reservasi->id) }}"
+                                       class="btn btn-sm btn-outline-secondary"
+                                       title="Lihat Detail">
 
-            @endif
+                                        👁
 
+                                    </a>
 
-            {{-- TOMBOL TAMBAH --}}
-            <div class="d-flex justify-content-end mb-3">
 
-                <a href="{{ route('admin.reservasi.create') }}"
-                   class="btn btn-primary">
+                                    {{-- EDIT --}}
+                                    <a href="{{ route('admin.reservasi.edit', $reservasi->id) }}"
+                                       class="btn btn-sm btn-outline-primary"
+                                       title="Edit">
 
-                    + &nbsp; Tambah Reservasi
+                                        ✎
 
-                </a>
+                                    </a>
 
-            </div>
 
+                                    {{-- HAPUS --}}
+                                    <form method="POST"
+                                          action="{{ route('admin.reservasi.destroy', $reservasi->id) }}"
+                                          onsubmit="return confirm('Yakin ingin menghapus reservasi ini?')">
 
-            {{-- TABEL --}}
-            <div class="card border-0 shadow-sm">
+                                        @csrf
 
-                <div class="card-body">
+                                        @method('DELETE')
 
-                    <div class="table-responsive">
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="Hapus">
 
-                        <table class="table table-bordered align-middle mb-0">
+                                            🗑
 
-                            <thead class="table-light">
+                                        </button>
 
-                                <tr>
+                                    </form>
 
-                                    <th class="text-center">
-                                        No
-                                    </th>
+                                </div>
 
-                                    <th>
-                                        Penghuni
-                                    </th>
+                            </td>
 
-                                    <th>
-                                        Kamar
-                                    </th>
+                        </tr>
 
-                                    <th>
-                                        Tanggal Masuk
-                                    </th>
+                    @empty
 
-                                    <th>
-                                        Tanggal Keluar
-                                    </th>
+                        <tr>
 
-                                    <th>
-                                        Status
-                                    </th>
+                            <td colspan="7"
+                                class="text-center text-secondary py-4">
 
-                                    <th class="text-center">
-                                        Aksi
-                                    </th>
+                                Belum ada data reservasi.
 
-                                </tr>
+                            </td>
 
-                            </thead>
+                        </tr>
 
+                    @endforelse
 
-                            <tbody>
+                </tbody>
 
-                                @forelse($reservasis as $reservasi)
-
-                                    <tr>
-
-                                        {{-- NO --}}
-                                        <td class="text-center">
-                                            {{ $loop->iteration }}
-                                        </td>
-
-
-                                        {{-- PENGHUNI --}}
-                                        <td>
-                                            {{ $reservasi->penghuni->nama ?? '-' }}
-                                        </td>
-
-
-                                        {{-- KAMAR --}}
-                                        <td>
-                                            {{ $reservasi->kamar->nomor_kamar ?? '-' }}
-                                        </td>
-
-
-                                        {{-- TANGGAL MASUK --}}
-                                        <td>
-                                            {{ date('d-m-Y', strtotime($reservasi->tanggal_masuk)) }}
-                                        </td>
-
-
-                                        {{-- TANGGAL KELUAR --}}
-                                        <td>
-
-                                            @if($reservasi->tanggal_keluar)
-
-                                                {{ date('d-m-Y', strtotime($reservasi->tanggal_keluar)) }}
-
-                                            @else
-
-                                                -
-
-                                            @endif
-
-                                        </td>
-
-
-                                        {{-- STATUS --}}
-                                        <td>
-
-                                            @if($reservasi->status == 'Pending')
-
-                                                <span class="badge bg-warning text-dark">
-                                                    Pending
-                                                </span>
-
-                                            @elseif($reservasi->status == 'Aktif')
-
-                                                <span class="badge bg-success">
-                                                    Aktif
-                                                </span>
-
-                                            @elseif($reservasi->status == 'Selesai')
-
-                                                <span class="badge bg-info text-dark">
-                                                    Selesai
-                                                </span>
-
-                                            @elseif($reservasi->status == 'Dibatalkan')
-
-                                                <span class="badge bg-danger">
-                                                    Dibatalkan
-                                                </span>
-
-                                            @endif
-
-                                        </td>
-
-
-                                        {{-- AKSI --}}
-                                        <td class="text-center">
-
-                                            <div class="d-flex justify-content-center gap-2">
-
-                                                {{-- DETAIL --}}
-                                                <a
-                                                    href="{{ route('admin.reservasi.show', $reservasi->id) }}"
-                                                    class="btn btn-sm btn-outline-secondary"
-                                                    title="Lihat Detail">
-
-                                                    👁
-
-                                                </a>
-
-
-                                                {{-- EDIT --}}
-                                                <a
-                                                    href="{{ route('admin.reservasi.edit', $reservasi->id) }}"
-                                                    class="btn btn-sm btn-outline-primary"
-                                                    title="Edit">
-
-                                                    ✎
-
-                                                </a>
-
-
-                                                {{-- HAPUS --}}
-                                                <form
-                                                    method="POST"
-                                                    action="{{ route('admin.reservasi.destroy', $reservasi->id) }}"
-                                                    onsubmit="return confirm('Yakin ingin menghapus reservasi ini?')">
-
-                                                    @csrf
-
-                                                    @method('DELETE')
-
-                                                    <button
-                                                        type="submit"
-                                                        class="btn btn-sm btn-outline-danger"
-                                                        title="Hapus">
-
-                                                        🗑
-
-                                                    </button>
-
-                                                </form>
-
-                                            </div>
-
-                                        </td>
-
-                                    </tr>
-
-                                @empty
-
-                                    <tr>
-
-                                        <td
-                                            colspan="7"
-                                            class="text-center text-secondary py-4">
-
-                                            Belum ada data reservasi.
-
-                                        </td>
-
-                                    </tr>
-
-                                @endforelse
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
-
-            </div>
+            </table>
 
         </div>
 

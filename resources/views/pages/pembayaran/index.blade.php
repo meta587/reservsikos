@@ -1,341 +1,219 @@
-@extends('layouts.auth')
+@extends('layouts.app')
 
 @section('title', 'Data Pembayaran | Reservasi Kos')
 
+@section('page-title', 'Data Pembayaran')
+
 @section('content')
 
-<div class="container-fluid py-3">
+{{-- PESAN SUKSES --}}
+@if(session('success'))
 
-    <div class="row">
+    <div class="alert alert-success alert-dismissible fade show"
+         role="alert">
 
-        {{-- SIDEBAR --}}
-        <div class="col-md-2">
+        {{ session('success') }}
 
-            <div class="bg-primary text-white rounded-3 min-vh-100 p-3">
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
 
-                <h5 class="mb-4">
-                    Reservasi Kos
-                </h5>
+    </div>
 
-                <div class="d-grid gap-2">
+@endif
 
-                    {{-- DASHBOARD --}}
-                    <a href="{{ route('admin.dashboard') }}"
-                       class="btn btn-primary text-white text-start">
-                        🏠 Dashboard
-                    </a>
 
-                    {{-- KAMAR --}}
-                    <a href="{{ route('admin.kamar.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ▣ Kamar
-                    </a>
+{{-- TOMBOL TAMBAH --}}
+<div class="d-flex justify-content-end mb-3">
 
-                    {{-- PENGHUNI --}}
-                    <a href="{{ route('admin.penghuni.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ♙ Penghuni
-                    </a>
+    <a href="{{ route('admin.pembayaran.create') }}"
+       class="btn btn-primary">
 
-                    {{-- RESERVASI --}}
-                    <a href="{{ route('admin.reservasi.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ▣ Reservasi
-                    </a>
+        + &nbsp; Tambah Pembayaran
 
-                    {{-- PEMBAYARAN --}}
-                    <a href="{{ route('admin.pembayaran.index') }}"
-                       class="btn btn-light text-primary text-start">
-                        ▣ Pembayaran
-                    </a>
+    </a>
 
-                </div>
+</div>
 
-            </div>
 
-        </div>
+{{-- TABEL PEMBAYARAN --}}
+<div class="card border-0 shadow-sm">
 
+    <div class="card-body">
 
-        {{-- KONTEN UTAMA --}}
-        <div class="col-md-10">
+        <div class="table-responsive">
 
-            {{-- HEADER --}}
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <table class="table table-bordered align-middle mb-0">
 
-                <div>
+                <thead class="table-light">
 
-                    <h2 class="fw-bold mb-1">
-                        Data Pembayaran
-                    </h2>
+                    <tr>
 
-                    <small class="text-secondary">
-                        🏠 Dashboard
-                        <span class="mx-2">›</span>
-                        Pembayaran
-                    </small>
+                        <th class="text-center">
+                            No
+                        </th>
 
-                </div>
+                        <th>
+                            Reservasi
+                        </th>
 
+                        <th>
+                            Tanggal
+                        </th>
 
-                {{-- PROFIL ADMIN --}}
-                <div class="dropdown">
+                        <th>
+                            Jumlah
+                        </th>
 
-                    <button
-                        class="btn btn-light dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown">
+                        <th>
+                            Metode
+                        </th>
 
-                        👤 Admin
+                        <th>
+                            Status
+                        </th>
 
-                    </button>
+                        <th class="text-center">
+                            Aksi
+                        </th>
 
-                    <ul class="dropdown-menu dropdown-menu-end">
+                    </tr>
 
-                        <li>
-                            <a class="dropdown-item"
-                               href="{{ route('admin.profil') }}">
-                                Profil
-                            </a>
-                        </li>
+                </thead>
 
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
 
-                        <li>
+                <tbody>
 
-                            <form method="POST"
-                                  action="{{ route('admin.logout') }}">
+                    @forelse($pembayarans as $pembayaran)
 
-                                @csrf
+                        <tr>
 
-                                <button
-                                    type="submit"
-                                    class="dropdown-item text-danger">
+                            {{-- NO --}}
+                            <td class="text-center">
+                                {{ $loop->iteration }}
+                            </td>
 
-                                    Logout
 
-                                </button>
+                            {{-- RESERVASI --}}
+                            <td>
+                                {{ $pembayaran->reservasi_id }}
+                            </td>
 
-                            </form>
 
-                        </li>
+                            {{-- TANGGAL --}}
+                            <td>
+                                {{ \Carbon\Carbon::parse($pembayaran->tanggal_pembayaran)->format('d/m/Y') }}
+                            </td>
 
-                    </ul>
 
-                </div>
+                            {{-- JUMLAH --}}
+                            <td>
+                                Rp{{ number_format($pembayaran->jumlah_pembayaran, 0, ',', '.') }}
+                            </td>
 
-            </div>
 
+                            {{-- METODE --}}
+                            <td>
+                                {{ $pembayaran->metode_pembayaran }}
+                            </td>
 
-            {{-- PESAN SUKSES --}}
-            @if(session('success'))
 
-                <div class="alert alert-success alert-dismissible fade show"
-                     role="alert">
+                            {{-- STATUS --}}
+                            <td>
 
-                    {{ session('success') }}
+                                @if($pembayaran->status_pembayaran == 'Lunas')
 
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="alert">
-                    </button>
+                                    <span class="badge bg-success">
+                                        Lunas
+                                    </span>
 
-                </div>
+                                @elseif($pembayaran->status_pembayaran == 'Pending')
 
-            @endif
+                                    <span class="badge bg-warning text-dark">
+                                        Pending
+                                    </span>
 
+                                @else
 
-            {{-- TOMBOL TAMBAH --}}
-            <div class="d-flex justify-content-end mb-3">
+                                    <span class="badge bg-secondary">
+                                        {{ $pembayaran->status_pembayaran }}
+                                    </span>
 
-                <a href="{{ route('admin.pembayaran.create') }}"
-                   class="btn btn-primary">
+                                @endif
 
-                    + &nbsp; Tambah Pembayaran
+                            </td>
 
-                </a>
 
-            </div>
+                            {{-- AKSI --}}
+                            <td class="text-center">
 
+                                <div class="d-flex justify-content-center gap-2">
 
-            {{-- TABEL --}}
-            <div class="card border-0 shadow-sm">
+                                    {{-- DETAIL --}}
+                                    <a href="{{ route('admin.pembayaran.show', $pembayaran->id) }}"
+                                       class="btn btn-sm btn-outline-secondary"
+                                       title="Detail">
 
-                <div class="card-body">
+                                        👁
 
-                    <div class="table-responsive">
+                                    </a>
 
-                        <table class="table table-bordered align-middle mb-0">
 
-                            <thead class="table-light">
+                                    {{-- EDIT --}}
+                                    <a href="{{ route('admin.pembayaran.edit', $pembayaran->id) }}"
+                                       class="btn btn-sm btn-outline-primary"
+                                       title="Edit">
 
-                                <tr>
+                                        ✎
 
-                                    <th class="text-center">
-                                        No
-                                    </th>
+                                    </a>
 
-                                    <th>
-                                        Reservasi
-                                    </th>
 
-                                    <th>
-                                        Tanggal
-                                    </th>
+                                    {{-- HAPUS --}}
+                                    <form method="POST"
+                                          action="{{ route('admin.pembayaran.destroy', $pembayaran->id) }}"
+                                          onsubmit="return confirm('Yakin ingin menghapus pembayaran ini?')">
 
-                                    <th>
-                                        Jumlah
-                                    </th>
+                                        @csrf
 
-                                    <th>
-                                        Metode
-                                    </th>
+                                        @method('DELETE')
 
-                                    <th>
-                                        Status
-                                    </th>
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="Hapus">
 
-                                    <th class="text-center">
-                                        Aksi
-                                    </th>
+                                            🗑
 
-                                </tr>
+                                        </button>
 
-                            </thead>
+                                    </form>
 
+                                </div>
 
-                            <tbody>
+                            </td>
 
-                                @forelse($pembayarans as $pembayaran)
+                        </tr>
 
-                                    <tr>
 
-                                        {{-- NO --}}
-                                        <td class="text-center">
-                                            {{ $loop->iteration }}
-                                        </td>
+                    @empty
 
+                        <tr>
 
-                                        {{-- RESERVASI --}}
-                                        <td>
-                                            {{ $pembayaran->reservasi_id }}
-                                        </td>
+                            <td colspan="7"
+                                class="text-center text-secondary py-4">
 
+                                Belum ada data pembayaran.
 
-                                        {{-- TANGGAL --}}
-                                        <td>
-                                            {{ \Carbon\Carbon::parse($pembayaran->tanggal_pembayaran)->format('d/m/Y') }}
-                                        </td>
+                            </td>
 
+                        </tr>
 
-                                        {{-- JUMLAH --}}
-                                        <td>
-                                            Rp{{ number_format($pembayaran->jumlah_pembayaran, 0, ',', '.') }}
-                                        </td>
+                    @endforelse
 
+                </tbody>
 
-                                        {{-- METODE --}}
-                                        <td>
-                                            {{ $pembayaran->metode_pembayaran }}
-                                        </td>
-
-
-                                        {{-- STATUS --}}
-                                        <td>
-
-                                            @if($pembayaran->status_pembayaran == 'Lunas')
-
-                                                <span class="badge bg-success">
-                                                    Lunas
-                                                </span>
-
-                                            @elseif($pembayaran->status_pembayaran == 'Pending')
-
-                                                <span class="badge bg-warning text-dark">
-                                                    Pending
-                                                </span>
-
-                                            @else
-
-                                                <span class="badge bg-secondary">
-                                                    {{ $pembayaran->status_pembayaran }}
-                                                </span>
-
-                                            @endif
-
-                                        </td>
-
-
-                                        {{-- AKSI --}}
-                                        <td class="text-center">
-
-                                            <div class="d-flex justify-content-center gap-2">
-
-                                                {{-- DETAIL --}}
-                                                <a href="{{ route('admin.pembayaran.show', $pembayaran->id) }}"
-                                                   class="btn btn-sm btn-outline-secondary"
-                                                   title="Detail">
-                                                    👁
-                                                </a>
-
-
-                                                {{-- EDIT --}}
-                                                <a href="{{ route('admin.pembayaran.edit', $pembayaran->id) }}"
-                                                   class="btn btn-sm btn-outline-primary"
-                                                   title="Edit">
-                                                    ✎
-                                                </a>
-
-
-                                                {{-- HAPUS --}}
-                                                <form method="POST"
-                                                      action="{{ route('admin.pembayaran.destroy', $pembayaran->id) }}"
-                                                      onsubmit="return confirm('Yakin ingin menghapus pembayaran ini?')">
-
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button
-                                                        type="submit"
-                                                        class="btn btn-sm btn-outline-danger"
-                                                        title="Hapus">
-                                                        🗑
-                                                    </button>
-
-                                                </form>
-
-                                            </div>
-
-                                        </td>
-
-                                    </tr>
-
-                                @empty
-
-                                    <tr>
-
-                                        <td colspan="7"
-                                            class="text-center text-secondary py-4">
-
-                                            Belum ada data pembayaran.
-
-                                        </td>
-
-                                    </tr>
-
-                                @endforelse
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
-
-            </div>
+            </table>
 
         </div>
 

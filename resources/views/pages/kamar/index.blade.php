@@ -1,317 +1,195 @@
-@extends('layouts.auth')
+@extends('layouts.app')
 
 @section('title', 'Data Kamar | Reservasi Kos')
 
+@section('page-title', 'Data Kamar')
+
 @section('content')
 
-<div class="container-fluid py-3">
+{{-- TOMBOL TAMBAH --}}
+<div class="d-flex justify-content-end mb-3">
 
-    <div class="row">
+    <a href="{{ route('admin.kamar.create') }}"
+       class="btn btn-primary">
 
-        {{-- SIDEBAR --}}
-        <div class="col-md-2">
+        + &nbsp; Tambah Kamar
 
-            <div class="bg-primary text-white rounded-3 min-vh-100 p-3">
+    </a>
 
-                <h5 class="mb-4">
-                    Reservasi Kos
-                </h5>
+</div>
 
-                <div class="d-grid gap-2">
 
-                    <a href="{{ route('admin.dashboard') }}"
-                       class="btn btn-primary text-white text-start">
-                        🏠 Dashboard
-                    </a>
+{{-- TABLE DATA KAMAR --}}
+<div class="card border-0 shadow-sm">
 
-                    <a href="{{ route('admin.kamar.index') }}"
-                       class="btn btn-light text-primary text-start">
-                        ▣ Kamar
-                    </a>
+    <div class="card-body">
 
-                    <a href="{{ route('admin.penghuni.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ♙ Penghuni
-                    </a>
+        <div class="table-responsive">
 
-                    <a href="{{ route('admin.reservasi.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ▣ Reservasi
-                    </a>
+            <table class="table table-bordered align-middle mb-0">
 
-                    <a href="{{ route('admin.pembayaran.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ▣ Pembayaran
-                    </a>
+                <thead class="table-light">
 
-                </div>
+                    <tr>
 
-            </div>
+                        <th class="text-center">
+                            No
+                        </th>
 
-        </div>
+                        <th>
+                            Nomor Kamar
+                        </th>
 
+                        <th>
+                            Tipe Kamar
+                        </th>
 
-        {{-- KONTEN UTAMA --}}
-        <div class="col-md-10">
+                        <th>
+                            Harga
+                        </th>
 
-            {{-- HEADER --}}
-            <div class="d-flex justify-content-between align-items-center mb-4">
+                        <th>
+                            Fasilitas
+                        </th>
 
-                <div>
+                        <th class="text-center">
+                            Status
+                        </th>
 
-                    <h2 class="fw-bold mb-1">
-                        Data Kamar
-                    </h2>
+                        <th class="text-center">
+                            Aksi
+                        </th>
 
-                    <small class="text-secondary">
-                        🏠 Dashboard
-                        <span class="mx-2">›</span>
-                        Kamar
-                    </small>
+                    </tr>
 
-                </div>
+                </thead>
 
 
-                {{-- PROFIL --}}
-                <div class="dropdown">
+                <tbody>
 
-                    <button
-                        class="btn btn-light dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown">
+                    @forelse($kamars as $kamar)
 
-                        👤 Admin
+                        <tr>
 
-                    </button>
+                            {{-- NO --}}
+                            <td class="text-center">
+                                {{ $loop->iteration }}
+                            </td>
 
-                    <ul class="dropdown-menu dropdown-menu-end">
 
-                        <li>
-                            <a class="dropdown-item"
-                               href="{{ route('admin.profil') }}">
-                                Profil
-                            </a>
-                        </li>
+                            {{-- NOMOR KAMAR --}}
+                            <td>
+                                {{ $kamar->nomor_kamar }}
+                            </td>
 
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
 
-                        <li>
+                            {{-- TIPE KAMAR --}}
+                            <td>
+                                {{ $kamar->tipe_kamar }}
+                            </td>
 
-                            <form method="POST"
-                                  action="{{ route('admin.logout') }}">
 
-                                @csrf
+                            {{-- HARGA --}}
+                            <td>
+                                Rp{{ number_format($kamar->harga, 0, ',', '.') }}
+                            </td>
 
-                                <button
-                                    type="submit"
-                                    class="dropdown-item text-danger">
 
-                                    Logout
+                            {{-- FASILITAS --}}
+                            <td>
+                                {{ $kamar->fasilitas }}
+                            </td>
 
-                                </button>
 
-                            </form>
+                            {{-- STATUS --}}
+                            <td class="text-center">
 
-                        </li>
+                                @if($kamar->status_kamar == 'Tersedia')
 
-                    </ul>
+                                    <span class="badge bg-success-subtle text-success px-3 py-2">
+                                        Tersedia
+                                    </span>
 
-                </div>
+                                @else
 
-            </div>
+                                    <span class="badge bg-danger-subtle text-danger px-3 py-2">
+                                        Terisi
+                                    </span>
 
+                                @endif
 
-            {{-- TOMBOL TAMBAH --}}
-            <div class="d-flex justify-content-end mb-3">
+                            </td>
 
-                <a href="{{ route('admin.kamar.create') }}"
-                   class="btn btn-primary">
 
-                    + &nbsp; Tambah Kamar
+                            {{-- AKSI --}}
+                            <td class="text-center">
 
-                </a>
+                                <div class="d-flex justify-content-center gap-2">
 
-            </div>
+                                    {{-- DETAIL --}}
+                                    <a href="{{ route('admin.kamar.show', $kamar->id) }}"
+                                       class="btn btn-sm btn-outline-secondary"
+                                       title="Lihat Detail">
 
+                                        👁
 
-            {{-- TABLE DATA KAMAR --}}
-            <div class="card border-0 shadow-sm">
+                                    </a>
 
-                <div class="card-body">
 
-                    <div class="table-responsive">
+                                    {{-- EDIT --}}
+                                    <a href="{{ route('admin.kamar.edit', $kamar->id) }}"
+                                       class="btn btn-sm btn-outline-primary"
+                                       title="Edit">
 
-                        <table class="table table-bordered align-middle mb-0">
+                                        ✎
 
-                            <thead class="table-light">
+                                    </a>
 
-                                <tr>
 
-                                    <th class="text-center">
-                                        No
-                                    </th>
+                                    {{-- HAPUS --}}
+                                    <form method="POST"
+                                          action="{{ route('admin.kamar.destroy', $kamar->id) }}"
+                                          onsubmit="return confirm('Yakin ingin menghapus kamar {{ $kamar->nomor_kamar }}?')">
 
-                                    <th>
-                                        Nomor Kamar
-                                    </th>
+                                        @csrf
 
-                                    <th>
-                                        Tipe Kamar
-                                    </th>
+                                        @method('DELETE')
 
-                                    <th>
-                                        Harga
-                                    </th>
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="Hapus">
 
-                                    <th>
-                                        Fasilitas
-                                    </th>
+                                            🗑
 
-                                    <th class="text-center">
-                                        Status
-                                    </th>
+                                        </button>
 
-                                    <th class="text-center">
-                                        Aksi
-                                    </th>
+                                    </form>
 
-                                </tr>
+                                </div>
 
-                            </thead>
+                            </td>
 
+                        </tr>
 
-                            <tbody>
 
-                                @forelse($kamars as $kamar)
+                    @empty
 
-                                    <tr>
+                        <tr>
 
-                                        {{-- NO --}}
-                                        <td class="text-center">
-                                            {{ $loop->iteration }}
-                                        </td>
+                            <td colspan="7"
+                                class="text-center text-secondary py-4">
 
+                                Belum ada data kamar.
 
-                                        {{-- NOMOR KAMAR --}}
-                                        <td>
-                                            {{ $kamar->nomor_kamar }}
-                                        </td>
+                            </td>
 
+                        </tr>
 
-                                        {{-- TIPE KAMAR --}}
-                                        <td>
-                                            {{ $kamar->tipe_kamar }}
-                                        </td>
+                    @endforelse
 
+                </tbody>
 
-                                        {{-- HARGA --}}
-                                        <td>
-                                            Rp{{ number_format($kamar->harga, 0, ',', '.') }}
-                                        </td>
-
-
-                                        {{-- FASILITAS --}}
-                                        <td>
-                                            {{ $kamar->fasilitas }}
-                                        </td>
-
-
-                                        {{-- STATUS --}}
-                                        <td class="text-center">
-
-                                            @if($kamar->status_kamar == 'Tersedia')
-
-                                                <span class="badge bg-success-subtle text-success px-3 py-2">
-                                                    Tersedia
-                                                </span>
-
-                                            @else
-
-                                                <span class="badge bg-danger-subtle text-danger px-3 py-2">
-                                                    Terisi
-                                                </span>
-
-                                            @endif
-
-                                        </td>
-
-
-                                        {{-- AKSI --}}
-                                        <td class="text-center">
-
-                                            <div class="d-flex justify-content-center gap-2">
-
-                                                {{-- DETAIL --}}
-                                                <a href="{{ route('admin.kamar.show', $kamar->id) }}"
-                                                   class="btn btn-sm btn-outline-secondary"
-                                                   title="Lihat Detail">
-
-                                                    👁
-
-                                                </a>
-
-
-                                                {{-- EDIT --}}
-                                                <a href="{{ route('admin.kamar.edit', $kamar->id) }}"
-                                                   class="btn btn-sm btn-outline-primary"
-                                                   title="Edit">
-
-                                                    ✎
-
-                                                </a>
-
-
-                                                {{-- HAPUS --}}
-                                                <form
-                                                    method="POST"
-                                                    action="{{ route('admin.kamar.destroy', $kamar->id) }}"
-                                                    onsubmit="return confirm('Yakin ingin menghapus kamar {{ $kamar->nomor_kamar }}?')">
-
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button
-                                                        type="submit"
-                                                        class="btn btn-sm btn-outline-danger"
-                                                        title="Hapus">
-
-                                                        🗑
-
-                                                    </button>
-
-                                                </form>
-
-                                            </div>
-
-                                        </td>
-
-                                    </tr>
-
-                                @empty
-
-                                    <tr>
-
-                                        <td colspan="7"
-                                            class="text-center text-secondary py-4">
-
-                                            Belum ada data kamar.
-
-                                        </td>
-
-                                    </tr>
-
-                                @endforelse
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
-
-            </div>
+            </table>
 
         </div>
 

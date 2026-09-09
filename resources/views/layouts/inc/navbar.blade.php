@@ -1,73 +1,59 @@
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-    <!-- Sidebar Toggle (Topbar) -->
-    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-        <i class="fa fa-bars"></i>
-    </button>
+    <div>
+        <h2 class="fw-bold mb-1">
+            @yield('page-title', 'Dashboard')
+        </h2>
 
-    <!-- Topbar Navbar -->
-    <ul class="navbar-nav ml-auto">
+        <small class="text-secondary">
+            🏠 Dashboard
+            <span class="mx-2">›</span>
+            @yield('page-title', 'Dashboard')
+        </small>
+    </div>
 
-        <!-- Nav Item - User Information -->
-        <li class="nav-item dropdown no-arrow">
+    {{-- PROFIL --}}
+    <div class="dropdown">
 
-            <a class="nav-link dropdown-toggle"
-               href="#"
-               id="userDropdown"
-               role="button"
-               data-toggle="dropdown"
-               aria-haspopup="true"
-               aria-expanded="false">
+        <button class="btn btn-light dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown">
 
-                <i class="fas fa-user-circle fa-lg"></i>
+            👤 {{ Auth::user()->name }}
 
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                    {{ Auth::user()->name }}
-                </span>
+        </button>
 
-            </a>
+        <ul class="dropdown-menu dropdown-menu-end">
 
-            <!-- Dropdown - User Information -->
-            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                 aria-labelledby="userDropdown">
-
-                <!-- PROFILE -->
+            <li>
                 <a class="dropdown-item"
                    href="{{ route('admin.profil') }}">
-
-                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-
-                    Profile
-                    
+                    Profil
                 </a>
+            </li>
 
-                <div class="dropdown-divider"></div>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
 
-                <!-- LOGOUT -->
-                <a class="dropdown-item"
-                   href="#"
-                   onclick="event.preventDefault();
-                   document.getElementById('form-logout').submit();">
+            <li>
 
-                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-
-                    Logout
-
-                </a>
-
-                <form action="{{ route('admin.logout') }}"
-                      id="form-logout"
-                      method="POST"
-                      class="d-none">
+                <form method="POST"
+                      action="{{ route('admin.logout') }}">
 
                     @csrf
 
+                    <button type="submit"
+                            class="dropdown-item text-danger">
+                        Logout
+                    </button>
+
                 </form>
 
-            </div>
+            </li>
 
-        </li>
+        </ul>
 
-    </ul>
+    </div>
 
-</nav>
+</div>

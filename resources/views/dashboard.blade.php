@@ -1,47 +1,30 @@
-@extends('layouts.auth')
+@extends('layouts.app')
 
 @section('title', 'Dashboard | Reservasi Kos')
 
+@section('page-title', 'Dashboard')
+
 @section('content')
 
-<div class="container-fluid py-3">
 
-    <div class="row">
+<div class="row">
 
-        <div class="col-md-2">
+    {{-- TOTAL KAMAR --}}
+    <div class="col-xl-3 col-md-6 mb-4">
 
-            <div class="bg-primary text-white rounded-3 min-vh-100 p-3">
+        <div class="card border-0 shadow-sm h-100">
 
-                <h5 class="mb-4">
-                    Reservasi Kos
-                </h5>
+            <div class="card-body">
 
-                <div class="d-grid gap-2">
+                <div>
 
-                    <a href="{{ route('admin.dashboard') }}"
-                       class="btn btn-light text-primary text-start">
-                        🏠 Dashboard
-                    </a>
+                    <div class="text-primary text-uppercase fw-bold mb-2">
+                        Total Kamar
+                    </div>
 
-                    <a href="{{ route('admin.kamar.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ▣ Kamar
-                    </a>
-
-                    <a href="{{ route('admin.penghuni.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ♙ Penghuni
-                    </a>
-
-                    <a href="{{ route('admin.reservasi.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ▣ Reservasi
-                    </a>
-
-                    <a href="{{ route('admin.pembayaran.index') }}"
-                       class="btn btn-primary text-white text-start">
-                        ▣ Pembayaran
-                    </a>
+                    <div class="h4 mb-0 fw-bold">
+                        {{ $totalKamar }}
+                    </div>
 
                 </div>
 
@@ -49,286 +32,210 @@
 
         </div>
 
+    </div>
 
-        <div class="col-md-10">
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
+    {{-- TOTAL PENGHUNI --}}
+    <div class="col-xl-3 col-md-6 mb-4">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
 
                 <div>
-                    <h2 class="fw-bold mb-1">
-                        Dashboard
-                    </h2>
 
-                    <small class="text-secondary">
-                        🏠 Dashboard
-                    </small>
-                </div>
-
-
-                <div class="dropdown">
-
-                    <button
-                        class="btn btn-light dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown">
-
-                        👤 Admin
-
-                    </button>
-
-                    <ul class="dropdown-menu dropdown-menu-end">
-
-                        <li>
-                            <a class="dropdown-item"
-                               href="{{ route('admin.profil') }}">
-                                Profil
-                            </a>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li>
-
-                            <form method="POST"
-                                  action="{{ route('admin.logout') }}">
-
-                                @csrf
-
-                                <button
-                                    type="submit"
-                                    class="dropdown-item text-danger">
-
-                                    Logout
-
-                                </button>
-
-                            </form>
-
-                        </li>
-
-                    </ul>
-
-                </div>
-
-            </div>
-
-
-            <div class="row g-3 mb-4">
-
-                <div class="col-md-3">
-
-                    <div class="card border-0 shadow-sm">
-
-                        <div class="card-body">
-
-                            <h2 class="text-primary fw-bold">
-                                {{ $totalKamar }}
-                            </h2>
-
-                            <p class="text-secondary mb-0">
-                                Total Kamar
-                            </p>
-
-                        </div>
-
+                    <div class="text-info text-uppercase fw-bold mb-2">
+                        Penghuni
                     </div>
 
-                </div>
-
-
-                <div class="col-md-3">
-
-                    <div class="card border-0 shadow-sm">
-
-                        <div class="card-body">
-
-                            <h2 class="text-primary fw-bold">
-                                {{ $totalPenghuni }}
-                            </h2>
-
-                            <p class="text-secondary mb-0">
-                                Penghuni
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="col-md-3">
-
-                    <div class="card border-0 shadow-sm">
-
-                        <div class="card-body">
-
-                            <h2 class="text-success fw-bold">
-                                {{ $reservasiAktif }}
-                            </h2>
-
-                            <p class="text-secondary mb-0">
-                                Reservasi Aktif
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="col-md-3">
-
-                    <div class="card border-0 shadow-sm">
-
-                        <div class="card-body">
-
-                            <h2 class="text-dark fw-bold">
-                                {{ $pembayaranBulanIni }}
-                            </h2>
-
-                            <p class="text-secondary mb-0">
-                                Pembayaran Bulan Ini
-                            </p>
-
-                        </div>
-
+                    <div class="h4 mb-0 fw-bold">
+                        {{ $totalPenghuni }}
                     </div>
 
                 </div>
 
             </div>
 
+        </div>
 
-            <div class="card border-0 shadow-sm">
+    </div>
 
-                <div class="card-body">
 
-                    <h5 class="fw-bold mb-3">
-                        Reservasi Terbaru
-                    </h5>
+    {{-- RESERVASI AKTIF --}}
+    <div class="col-xl-3 col-md-6 mb-4">
 
-                    <div class="table-responsive">
+        <div class="card border-0 shadow-sm h-100">
 
-                        <table class="table table-bordered align-middle">
+            <div class="card-body">
 
-                            <thead class="table-light">
+                <div>
 
-                                <tr>
+                    <div class="text-success text-uppercase fw-bold mb-2">
+                        Reservasi Aktif
+                    </div>
 
-                                    <th>
-                                        Penghuni
-                                    </th>
-
-                                    <th>
-                                        Kamar
-                                    </th>
-
-                                    <th>
-                                        Check In
-                                    </th>
-
-                                    <th>
-                                        Check Out
-                                    </th>
-
-                                    <th>
-                                        Status
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @forelse($reservasiTerbaru as $reservasi)
-
-                                    @php
-
-                                        $hariIni = \Carbon\Carbon::today();
-
-                                        $checkIn = \Carbon\Carbon::parse(
-                                            $reservasi->tanggal_masuk
-                                        );
-
-                                        $checkOut = \Carbon\Carbon::parse(
-                                            $reservasi->tanggal_keluar
-                                        );
-
-                                        $aktif =
-                                            $hariIni->between(
-                                                $checkIn,
-                                                $checkOut
-                                            );
-
-                                    @endphp
-
-                                    <tr>
-
-                                        <td>
-                                            {{ $reservasi->nama_penghuni }}
-                                        </td>
-
-                                        <td>
-                                            {{ $reservasi->nomor_kamar }}
-                                        </td>
-
-                                        <td>
-                                            {{ $checkIn->format('d/m/Y') }}
-                                        </td>
-
-                                        <td>
-                                            {{ $checkOut->format('d/m/Y') }}
-                                        </td>
-
-                                        <td>
-
-                                            @if($aktif)
-
-                                                <span class="badge bg-success-subtle text-success">
-                                                    Aktif
-                                                </span>
-
-                                            @else
-
-                                                <span class="badge bg-secondary-subtle text-secondary">
-                                                    Selesai
-                                                </span>
-
-                                            @endif
-
-                                        </td>
-
-                                    </tr>
-
-                                @empty
-
-                                    <tr>
-
-                                        <td colspan="5"
-                                            class="text-center text-secondary">
-
-                                            Belum ada data reservasi.
-
-                                        </td>
-
-                                    </tr>
-
-                                @endforelse
-
-                            </tbody>
-
-                        </table>
-
+                    <div class="h4 mb-0 fw-bold">
+                        {{ $reservasiAktif }}
                     </div>
 
                 </div>
 
             </div>
+
+        </div>
+
+    </div>
+
+
+    {{-- PEMBAYARAN --}}
+    <div class="col-xl-3 col-md-6 mb-4">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <div>
+
+                    <div class="text-warning text-uppercase fw-bold mb-2">
+                        Pembayaran Bulan Ini
+                    </div>
+
+                    <div class="h4 mb-0 fw-bold">
+                        {{ $pembayaranBulanIni }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{{-- RESERVASI TERBARU --}}
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-header bg-white py-3">
+
+        <h6 class="mb-0 fw-bold text-primary">
+            Reservasi Terbaru
+        </h6>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered align-middle mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>
+                            Penghuni
+                        </th>
+
+                        <th>
+                            Kamar
+                        </th>
+
+                        <th>
+                            Check In
+                        </th>
+
+                        <th>
+                            Check Out
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @forelse($reservasiTerbaru as $reservasi)
+
+                        @php
+
+                            $hariIni = \Carbon\Carbon::today();
+
+                            $checkIn = \Carbon\Carbon::parse($reservasi->tanggal_masuk);
+
+                            $checkOut = \Carbon\Carbon::parse($reservasi->tanggal_keluar);
+
+                            $aktif = $hariIni->between($checkIn, $checkOut);
+
+                        @endphp
+
+
+                        <tr>
+
+                            <td>
+                                {{ $reservasi->nama_penghuni }}
+                            </td>
+
+                            <td>
+                                {{ $reservasi->nomor_kamar }}
+                            </td>
+
+                            <td>
+                                {{ $checkIn->format('d/m/Y') }}
+                            </td>
+
+                            <td>
+                                {{ $checkOut->format('d/m/Y') }}
+                            </td>
+
+                            <td>
+
+                                @if($aktif)
+
+                                    <span class="badge bg-success">
+                                        Aktif
+                                    </span>
+
+                                @else
+
+                                    <span class="badge bg-secondary">
+                                        Selesai
+                                    </span>
+
+                                @endif
+
+                            </td>
+
+                        </tr>
+
+
+                    @empty
+
+                        <tr>
+
+                            <td colspan="5"
+                                class="text-center text-secondary py-4">
+
+                                Belum ada data reservasi.
+
+                            </td>
+
+                        </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
 
         </div>
 
