@@ -43,12 +43,6 @@
                         💳 Pembayaran
                     </a>
 
-                    {{-- Profil --}}
-                    <a href="#"
-                       class="btn btn-primary text-white text-start">
-                        👤 Profil
-                    </a>
-
                 </div>
 
             </div>
@@ -63,7 +57,6 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
 
                 <div>
-
                     <h2 class="fw-bold mb-1">
                         Dashboard Penghuni
                     </h2>
@@ -71,18 +64,41 @@
                     <small class="text-secondary">
                         Halaman utama penghuni
                     </small>
-
                 </div>
 
-                <div>
 
-                    <span class="fw-semibold">
+                {{-- NAMA + LOGOUT --}}
+                <div class="dropdown">
+
+                    <button
+                        class="btn btn-light dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown">
+
                         👤 {{ Auth::user()->name }}
-                    </span>
 
-                    <span class="badge bg-primary">
-                        Penghuni
-                    </span>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+
+                        <li>
+                            <form method="POST"
+                                  action="{{ route('penghuni.logout') }}">
+
+                                @csrf
+
+                                <button
+                                    type="submit"
+                                    class="dropdown-item text-danger">
+
+                                    Logout
+
+                                </button>
+
+                            </form>
+                        </li>
+
+                    </ul>
 
                 </div>
 
@@ -207,6 +223,7 @@
 
                 </div>
 
+            </div>
 
         </div>
 
