@@ -25,22 +25,10 @@
                         🏠 Dashboard
                     </a>
 
-                    {{-- Kamar --}}
-                    <a href="#"
-                       class="btn btn-primary text-white text-start">
-                        🛏️ Kamar
-                    </a>
-
                     {{-- Reservasi --}}
                     <a href="#"
                        class="btn btn-primary text-white text-start">
                         📋 Reservasi
-                    </a>
-
-                    {{-- Pembayaran --}}
-                    <a href="#"
-                       class="btn btn-primary text-white text-start">
-                        💳 Pembayaran
                     </a>
 
                 </div>
@@ -62,7 +50,7 @@
                     </h2>
 
                     <small class="text-secondary">
-                        Halaman utama penghuni
+                        Halaman penghuni
                     </small>
                 </div>
 
@@ -117,109 +105,8 @@
                     <p class="text-secondary mb-0">
                         Selamat datang di aplikasi Reservasi Kos.
                         Kamu dapat melihat kamar yang tersedia,
-                        melakukan reservasi, dan melihat pembayaran.
+                        melakukan reservasi.
                     </p>
-
-                </div>
-
-            </div>
-
-
-            {{-- MENU UTAMA --}}
-            <div class="row g-4">
-
-                {{-- KAMAR --}}
-                <div class="col-md-4">
-
-                    <div class="card border-0 shadow-sm h-100">
-
-                        <div class="card-body p-4">
-
-                            <div class="fs-1 mb-3">
-                                🛏️
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Kamar
-                            </h5>
-
-                            <p class="text-secondary">
-                                Lihat informasi kamar yang tersedia
-                                untuk kamu reservasi.
-                            </p>
-
-                            <a href="#"
-                               class="btn btn-primary">
-                                Lihat Kamar
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                {{-- RESERVASI --}}
-                <div class="col-md-4">
-
-                    <div class="card border-0 shadow-sm h-100">
-
-                        <div class="card-body p-4">
-
-                            <div class="fs-1 mb-3">
-                                📋
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Reservasi
-                            </h5>
-
-                            <p class="text-secondary">
-                                Lakukan reservasi kamar dan lihat
-                                informasi reservasi kamu.
-                            </p>
-
-                            <a href="#"
-                               class="btn btn-primary">
-                                Reservasi Saya
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                {{-- PEMBAYARAN --}}
-                <div class="col-md-4">
-
-                    <div class="card border-0 shadow-sm h-100">
-
-                        <div class="card-body p-4">
-
-                            <div class="fs-1 mb-3">
-                                💳
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Pembayaran
-                            </h5>
-
-                            <p class="text-secondary">
-                                Lihat dan lakukan pembayaran
-                                reservasi kamu.
-                            </p>
-
-                            <a href="#"
-                               class="btn btn-primary">
-                                Pembayaran
-                            </a>
-
-                        </div>
-
-                    </div>
 
                 </div>
 
