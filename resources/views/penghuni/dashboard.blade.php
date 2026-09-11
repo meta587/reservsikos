@@ -26,7 +26,7 @@
                     </a>
 
                     {{-- Reservasi --}}
-                    <a href="#"
+                    <a href="{{ route('reservasi-penghuni.index') }}"
                        class="btn btn-primary text-white text-start">
                         📋 Reservasi
                     </a>
@@ -107,6 +107,144 @@
                         Kamu dapat melihat kamar yang tersedia,
                         melakukan reservasi.
                     </p>
+
+                </div>
+
+            </div>
+
+
+            {{-- DAFTAR KAMAR --}}
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">
+                        🏠 Daftar Kamar
+                    </h4>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered align-middle">
+
+                            <thead class="table-light">
+
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nomor Kamar</th>
+                                    <th>Tipe Kamar</th>
+                                    <th>Harga</th>
+                                    <th>Fasilitas</th>
+                                    <th>Status</th>
+                                    <th>Reservasi</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @forelse($kamars as $kamar)
+
+                                    <tr>
+
+                                        {{-- NO --}}
+                                        <td>
+                                            {{ $loop->iteration }}
+                                        </td>
+
+
+                                        {{-- NOMOR KAMAR --}}
+                                        <td>
+                                            {{ $kamar->nomor_kamar }}
+                                        </td>
+
+
+                                        {{-- TIPE KAMAR --}}
+                                        <td>
+                                            {{ $kamar->tipe_kamar }}
+                                        </td>
+
+
+                                        {{-- HARGA --}}
+                                        <td>
+                                            Rp{{ number_format($kamar->harga, 0, ',', '.') }}
+                                        </td>
+
+
+                                        {{-- FASILITAS --}}
+                                        <td>
+                                            {{ $kamar->fasilitas }}
+                                        </td>
+
+
+                                        {{-- STATUS --}}
+                                        <td>
+
+                                            @if(strtolower(trim($kamar->status_kamar)) == 'tersedia')
+
+                                                <span class="badge bg-success">
+                                                    Tersedia
+                                                </span>
+
+                                            @else
+
+                                                <span class="badge bg-danger">
+                                                    Terisi
+                                                </span>
+
+                                            @endif
+
+                                        </td>
+
+
+                                        {{-- RESERVASI --}}
+                                        <td>
+
+                                            @if(strtolower(trim($kamar->status_kamar)) == 'tersedia')
+
+                                                <a href="{{ route('reservasi-penghuni.index', ['kamar_id' => $kamar->id]) }}"
+                                                   class="btn btn-primary btn-sm">
+
+                                                    📋 Reservasi
+
+                                                </a>
+
+                                            @else
+
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-secondary btn-sm"
+                                                    disabled>
+
+                                                    Tidak tersedia
+
+                                                </button>
+
+                                            @endif
+
+                                        </td>
+
+                                    </tr>
+
+                                @empty
+
+                                    <tr>
+
+                                        <td colspan="7"
+                                            class="text-center text-secondary">
+
+                                            Belum ada data kamar.
+
+                                        </td>
+
+                                    </tr>
+
+                                @endforelse
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
 

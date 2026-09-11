@@ -16,6 +16,7 @@ class Reservasi extends Model
         'kamar_id',
         'tanggal_masuk',
         'tanggal_keluar',
+        'lama_tinggal',
         'status',
     ];
 

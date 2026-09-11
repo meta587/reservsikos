@@ -6,6 +6,8 @@ use App\Models\Reservasi;
 use App\Models\Penghuni;
 use App\Models\Kamar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ReservasiController extends Controller
 {
@@ -25,7 +27,7 @@ class ReservasiController extends Controller
     }
 
     /**
-     * Menampilkan form tambah reservasi.
+     * Menampilkan form tambah reservasi admin.
      */
     public function create()
     {
@@ -39,7 +41,7 @@ class ReservasiController extends Controller
     }
 
     /**
-     * Menyimpan data reservasi baru.
+     * Menyimpan data reservasi dari admin.
      */
     public function store(Request $request)
     {
@@ -51,11 +53,21 @@ class ReservasiController extends Controller
             'status' => 'required|in:pending,aktif,selesai,dibatalkan',
         ]);
 
+        $lamaTinggal = null;
+
+        if ($request->tanggal_keluar) {
+            $tanggalMasuk = Carbon::parse($request->tanggal_masuk);
+            $tanggalKeluar = Carbon::parse($request->tanggal_keluar);
+
+            $lamaTinggal = $tanggalMasuk->diffInDays($tanggalKeluar);
+        }
+
         Reservasi::create([
             'penghuni_id' => $request->penghuni_id,
             'kamar_id' => $request->kamar_id,
             'tanggal_masuk' => $request->tanggal_masuk,
             'tanggal_keluar' => $request->tanggal_keluar,
+            'lama_tinggal' => $lamaTinggal,
             'status' => $request->status,
         ]);
 
@@ -65,11 +77,66 @@ class ReservasiController extends Controller
     }
 
     /**
+     * Menyimpan reservasi dari penghuni.
+     */
+    public function storePenghuni(Request $request)
+    {
+        $request->validate([
+            'kamar_id' => 'required|exists:kamars,id',
+            'tanggal_masuk' => 'required|date',
+            'tanggal_keluar' => 'required|date|after:tanggal_masuk',
+        ]);
+
+        $penghuni = Penghuni::where(
+            'email',
+            Auth::user()->email
+        )->first();
+
+        if (!$penghuni) {
+            return back()->with(
+                'error',
+                'Data penghuni tidak ditemukan.'
+            );
+        }
+
+        $tanggalMasuk = Carbon::parse(
+            $request->tanggal_masuk
+        );
+
+        $tanggalKeluar = Carbon::parse(
+            $request->tanggal_keluar
+        );
+
+        $lamaTinggal = $tanggalMasuk->diffInDays(
+            $tanggalKeluar
+        );
+
+        Reservasi::create([
+            'penghuni_id' => $penghuni->id,
+            'kamar_id' => $request->kamar_id,
+            'tanggal_masuk' => $request->tanggal_masuk,
+            'tanggal_keluar' => $request->tanggal_keluar,
+            'lama_tinggal' => $lamaTinggal,
+            'status' => 'pending',
+        ]);
+
+        return redirect()
+            ->route('penghuni.dashboard')
+            ->with(
+                'success',
+                'Reservasi berhasil dibuat.'
+            );
+    }
+
+    /**
      * Menampilkan detail reservasi.
      */
     public function show(Reservasi $reservasi)
     {
-        $reservasi->load(['penghuni', 'kamar']);
+        $reservasi->load([
+            'penghuni',
+            'kamar'
+        ]);
 
         return view(
             'pages.reservasi.show',
@@ -87,15 +154,21 @@ class ReservasiController extends Controller
 
         return view(
             'pages.reservasi.edit',
-            compact('reservasi', 'penghunis', 'kamars')
+            compact(
+                'reservasi',
+                'penghunis',
+                'kamars'
+            )
         );
     }
 
     /**
      * Mengupdate data reservasi.
      */
-    public function update(Request $request, Reservasi $reservasi)
-    {
+    public function update(
+        Request $request,
+        Reservasi $reservasi
+    ) {
         $request->validate([
             'penghuni_id' => 'required|exists:penghunis,id',
             'kamar_id' => 'required|exists:kamars,id',
@@ -104,17 +177,37 @@ class ReservasiController extends Controller
             'status' => 'required|in:pending,aktif,selesai,dibatalkan',
         ]);
 
+        $lamaTinggal = null;
+
+        if ($request->tanggal_keluar) {
+            $tanggalMasuk = Carbon::parse(
+                $request->tanggal_masuk
+            );
+
+            $tanggalKeluar = Carbon::parse(
+                $request->tanggal_keluar
+            );
+
+            $lamaTinggal = $tanggalMasuk->diffInDays(
+                $tanggalKeluar
+            );
+        }
+
         $reservasi->update([
             'penghuni_id' => $request->penghuni_id,
             'kamar_id' => $request->kamar_id,
             'tanggal_masuk' => $request->tanggal_masuk,
             'tanggal_keluar' => $request->tanggal_keluar,
+            'lama_tinggal' => $lamaTinggal,
             'status' => $request->status,
         ]);
 
         return redirect()
             ->route('admin.reservasi.index')
-            ->with('success', 'Data reservasi berhasil diperbarui.');
+            ->with(
+                'success',
+                'Data reservasi berhasil diperbarui.'
+            );
     }
 
     /**
@@ -126,6 +219,9 @@ class ReservasiController extends Controller
 
         return redirect()
             ->route('admin.reservasi.index')
-            ->with('success', 'Data reservasi berhasil dihapus.');
+            ->with(
+                'success',
+                'Data reservasi berhasil dihapus.'
+            );
     }
 }
