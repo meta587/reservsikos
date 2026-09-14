@@ -122,13 +122,7 @@
                             {{-- STATUS --}}
                             <td>
 
-                                @if($reservasi->status == 'Pending')
-
-                                    <span class="badge bg-warning text-dark">
-                                        Pending
-                                    </span>
-
-                                @elseif($reservasi->status == 'Aktif')
+                                @if($reservasi->status == 'Aktif')
 
                                     <span class="badge bg-success">
                                         Aktif

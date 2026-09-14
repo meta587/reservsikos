@@ -20,16 +20,16 @@
                 ▣ Kamar
             </a>
 
+                {{-- RESERVASI --}}
+            <a href="{{ route('admin.reservasi.index') }}"
+               class="btn {{ request()->routeIs('admin.reservasi.*') ? 'btn-light text-primary' : 'btn-primary text-white' }} text-start">
+                ▣ Reservasi
+            </a>
+
             {{-- PENGHUNI --}}
             <a href="{{ route('admin.penghuni.index') }}"
                class="btn {{ request()->routeIs('admin.penghuni.*') ? 'btn-light text-primary' : 'btn-primary text-white' }} text-start">
                 ♙ Penghuni
-            </a>
-
-            {{-- RESERVASI --}}
-            <a href="{{ route('admin.reservasi.index') }}"
-               class="btn {{ request()->routeIs('admin.reservasi.*') ? 'btn-light text-primary' : 'btn-primary text-white' }} text-start">
-                ▣ Reservasi
             </a>
 
             {{-- PEMBAYARAN --}}

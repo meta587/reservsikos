@@ -74,6 +74,7 @@
                                     {{ old('tipe_kamar') == 'Deluxe' ? 'selected' : '' }}>
                                     Deluxe
                                 </option>
+
                             </select>
 
                             @error('tipe_kamar')
@@ -124,12 +125,14 @@
                                 Fasilitas
                             </label>
 
-                            <textarea
+                            <input
+                                type="text"
                                 id="fasilitas"
                                 name="fasilitas"
-                                rows="4"
-                                class="form-control"
-                                placeholder="Masukkan fasilitas">{{ old('fasilitas') }}</textarea>
+                                class="form-control form-control-lg"
+                                value="{{ old('fasilitas') }}"
+                                placeholder="Pilih tipe kamar terlebih dahulu"
+                                readonly>
 
                             @error('fasilitas')
                                 <small class="text-danger">
@@ -211,4 +214,28 @@
 
 </div>
 
-@endsection
+
+                    {{-- OTOMATIS MENGISI FASILITAS --}}
+                <script>
+                    document.getElementById('tipe_kamar').addEventListener('change', function () {
+
+                        const fasilitas = document.getElementById('fasilitas');
+
+                        if (this.value === 'Standard') {
+
+                            fasilitas.value = 'Kasur, Kamar, WC Luar, Lemari';
+
+                        } else if (this.value === 'Deluxe') {
+
+                            fasilitas.value = 'AC, TV, Lemari, Kasur';
+
+                        } else {
+
+                            fasilitas.value = '';
+
+                        }
+
+                    });
+                </script>
+
+                @endsection

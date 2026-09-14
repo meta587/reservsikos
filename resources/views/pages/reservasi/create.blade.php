@@ -14,156 +14,224 @@
                 Tambah Reservasi
             </h3>
 
-            <form action="{{ route('admin.reservasi.store') }}" method="POST">
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form
+                action="{{ route('admin.reservasi.store') }}"
+                method="POST"
+            >
 
                 @csrf
 
-                <div class="row g-4">
+                {{-- NAMA --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Nama
+                    </label>
 
-                    {{-- PENGHUNI --}}
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Penghuni</label>
-
-                        <select
-                            name="penghuni_id"
-                            class="form-select form-select-lg">
-
-                            <option value="">Pilih Penghuni</option>
-
-                            @foreach($penghunis as $penghuni)
-                                <option
-                                    value="{{ $penghuni->id }}"
-                                    {{ old('penghuni_id') == $penghuni->id ? 'selected' : '' }}>
-                                    {{ $penghuni->nama }}
-                                </option>
-                            @endforeach
-
-                        </select>
-
-                        @error('penghuni_id')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                    <input
+                        type="text"
+                        name="nama_penghuni"
+                        class="form-control"
+                        value="{{ old('nama_penghuni') }}"
+                        placeholder="Masukkan nama"
+                        required
+                    >
+                </div>
 
 
-                    {{-- KAMAR --}}
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Kamar</label>
+                {{-- NIK --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        NIK
+                    </label>
 
-                        <select
-                            name="kamar_id"
-                            class="form-select form-select-lg">
-
-                            <option value="">Pilih Kamar</option>
-
-                            @foreach($kamars as $kamar)
-                                <option
-                                    value="{{ $kamar->id }}"
-                                    {{ old('kamar_id') == $kamar->id ? 'selected' : '' }}>
-                                    {{ $kamar->nomor_kamar }}
-                                </option>
-                            @endforeach
-
-                        </select>
-
-                        @error('kamar_id')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                    <input
+                        type="text"
+                        name="nik"
+                        class="form-control"
+                        value="{{ old('nik') }}"
+                        placeholder="Masukkan NIK"
+                        required
+                    >
+                </div>
 
 
-                    {{-- TANGGAL MASUK --}}
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">
-                            Tanggal Masuk
-                        </label>
+                {{-- NOMOR TELEPON --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Nomor Telepon
+                    </label>
 
-                        <input
-                            type="date"
-                            name="tanggal_masuk"
-                            class="form-control form-control-lg"
-                            value="{{ old('tanggal_masuk') }}">
-
-                        @error('tanggal_masuk')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-
-                    {{-- TANGGAL KELUAR --}}
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">
-                            Tanggal Keluar
-                        </label>
-
-                        <input
-                            type="date"
-                            name="tanggal_keluar"
-                            class="form-control form-control-lg"
-                            value="{{ old('tanggal_keluar') }}">
-
-                        @error('tanggal_keluar')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                    <input
+                        type="text"
+                        name="nomor_telepon"
+                        class="form-control"
+                        value="{{ old('nomor_telepon') }}"
+                        placeholder="Masukkan nomor telepon"
+                        required
+                    >
+                </div>
 
 
-                    {{-- STATUS --}}
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">
-                            Status
-                        </label>
+                {{-- EMAIL --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Email
+                    </label>
 
-                        <select
-                            name="status"
-                            class="form-select form-select-lg">
+                    <input
+                        type="email"
+                        name="email"
+                        class="form-control"
+                        value="{{ old('email') }}"
+                        placeholder="Masukkan email"
+                        required
+                    >
+                </div>
 
-                            <option value="">Pilih Status</option>
 
-                            <option value="pending"
-                                {{ old('status') == 'pending' ? 'selected' : '' }}>
-                                Pending
+                {{-- ALAMAT --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Alamat
+                    </label>
+
+                    <textarea
+                        name="alamat"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Masukkan alamat"
+                        required
+                    >{{ old('alamat') }}</textarea>
+                </div>
+
+
+                {{-- KAMAR --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Kamar
+                    </label>
+
+                    <select
+                        name="kamar_id"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            -- Pilih Kamar --
+                        </option>
+
+                        @foreach($kamars as $kamar)
+
+                            <option
+                                value="{{ $kamar->id }}"
+                                {{ old('kamar_id') == $kamar->id ? 'selected' : '' }}
+                            >
+                                {{ $kamar->nomor_kamar }}
+                                -
+                                {{ $kamar->tipe_kamar }}
                             </option>
 
-                            <option value="aktif"
-                                {{ old('status') == 'aktif' ? 'selected' : '' }}>
-                                Aktif
-                            </option>
+                        @endforeach
 
-                            <option value="selesai"
-                                {{ old('status') == 'selesai' ? 'selected' : '' }}>
-                                Selesai
-                            </option>
-
-                            <option value="dibatalkan"
-                                {{ old('status') == 'dibatalkan' ? 'selected' : '' }}>
-                                Dibatalkan
-                            </option>
-
-                        </select>
-
-                        @error('status')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                    </select>
 
                 </div>
 
 
-                {{-- TOMBOL --}}
-                <div class="d-flex justify-content-center gap-3 mt-5">
+                {{-- TANGGAL MASUK --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Tanggal Masuk
+                    </label>
 
-                    <button
-                        type="submit"
-                        class="btn btn-primary px-5 py-2">
-                        Simpan
-                    </button>
+                    <input
+                        type="date"
+                        name="tanggal_masuk"
+                        class="form-control"
+                        value="{{ old('tanggal_masuk') }}"
+                        required
+                    >
+                </div>
+
+
+                {{-- TANGGAL KELUAR --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        Tanggal Keluar
+                    </label>
+
+                    <input
+                        type="date"
+                        name="tanggal_keluar"
+                        class="form-control"
+                        value="{{ old('tanggal_keluar') }}"
+                    >
+                </div>
+
+
+                {{-- STATUS --}}
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">
+                        Status
+                    </label>
+
+                    <select
+                        name="status"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="Pending"
+                            {{ old('status', 'Pending') == 'Pending' ? 'selected' : '' }}>
+                            Pending
+                        </option>
+
+                        <option value="Aktif"
+                            {{ old('status') == 'Aktif' ? 'selected' : '' }}>
+                            Aktif
+                        </option>
+
+                        <option value="Selesai"
+                            {{ old('status') == 'Selesai' ? 'selected' : '' }}>
+                            Selesai
+                        </option>
+
+                        <option value="Dibatalkan"
+                            {{ old('status') == 'Dibatalkan' ? 'selected' : '' }}>
+                            Dibatalkan
+                        </option>
+
+                    </select>
+                </div>
+
+
+                {{-- TOMBOL --}}
+                <div class="d-flex gap-2">
 
                     <a
                         href="{{ route('admin.reservasi.index') }}"
-                        class="btn btn-outline-secondary px-5 py-2">
-                        Batal
+                        class="btn btn-secondary"
+                    >
+                        Kembali
                     </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Simpan 
+                    </button>
 
                 </div>
 
