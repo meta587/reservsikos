@@ -6,15 +6,13 @@ use App\Models\Reservasi;
 use App\Models\Penghuni;
 use App\Models\Kamar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReservasiController extends Controller
 {
-    // =========================
-    // DATA RESERVASI
-    // =========================
     public function index()
     {
-        $reservasis = Reservasi::with('kamar')
+        $reservasis = Reservasi::with(['penghuni', 'kamar'])
             ->latest()
             ->get();
 
@@ -24,10 +22,6 @@ class ReservasiController extends Controller
         );
     }
 
-
-    // =========================
-    // FORM TAMBAH RESERVASI
-    // =========================
     public function create()
     {
         $kamars = Kamar::where(
@@ -42,9 +36,6 @@ class ReservasiController extends Controller
     }
 
 
-    // =========================
-    // SIMPAN RESERVASI
-    // =========================
     public function store(Request $request)
     {
         $request->validate([
@@ -52,14 +43,13 @@ class ReservasiController extends Controller
             'nik' => 'required|string|max:20',
             'nomor_telepon' => 'required|string|max:16',
             'email' => 'required|email|max:128',
-            'alamat' => 'required',
+            'alamat' => 'required|string',
             'kamar_id' => 'required|exists:kamars,id',
             'tanggal_masuk' => 'required|date',
             'tanggal_keluar' => 'nullable|date|after:tanggal_masuk',
             'status' => 'required|in:Pending,Aktif,Selesai,Dibatalkan',
         ]);
 
-        // CEK KAMAR
         $kamar = Kamar::where('id', $request->kamar_id)
             ->where('status_kamar', 'Tersedia')
             ->first();
@@ -72,39 +62,97 @@ class ReservasiController extends Controller
                 ]);
         }
 
-        // SIMPAN RESERVASI
-        Reservasi::create([
-            'nama_penghuni' => $request->nama_penghuni,
-            'nik' => $request->nik,
-            'nomor_telepon' => $request->nomor_telepon,
-            'email' => $request->email,
-            'alamat' => $request->alamat,
-            'kamar_id' => $request->kamar_id,
-            'tanggal_masuk' => $request->tanggal_masuk,
-            'tanggal_keluar' => $request->tanggal_keluar,
-            'status' => $request->status,
-        ]);
+        DB::transaction(function () use ($request, $kamar) {
 
-        // KAMAR JADI TERISI
-        $kamar->update([
-            'status_kamar' => 'Terisi'
-        ]);
+            $penghuni = Penghuni::create([
+                'nama' => $request->nama_penghuni,
+                'nik' => $request->nik,
+                'nomor_telepon' => $request->nomor_telepon,
+                'email' => $request->email,
+                'alamat' => $request->alamat,
+            ]);
+
+            Reservasi::create([
+                'penghuni_id' => $penghuni->id,
+                'kamar_id' => $kamar->id,
+                'tanggal_masuk' => $request->tanggal_masuk,
+                'tanggal_keluar' => $request->tanggal_keluar,
+                'status' => $request->status,
+            ]);
+
+            $kamar->update([
+                'status_kamar' => 'Terisi'
+            ]);
+        });
 
         return redirect()
             ->route('admin.reservasi.index')
             ->with(
                 'success',
-                'Reservasi berhasil ditambahkan.'
+                'Reservasi berhasil ditambahkan dan data penghuni berhasil disimpan.'
+            );
+    }
+
+    public function storePenghuni(Request $request)
+    {
+        $request->validate([
+            'nama_penghuni' => 'required|string|max:128',
+            'nik' => 'required|string|max:20',
+            'nomor_telepon' => 'required|string|max:16',
+            'email' => 'required|email|max:128',
+            'alamat' => 'required|string',
+            'kamar_id' => 'required|exists:kamars,id',
+            'tanggal_masuk' => 'required|date',
+            'tanggal_keluar' => 'nullable|date|after:tanggal_masuk',
+        ]);
+
+        $kamar = Kamar::where('id', $request->kamar_id)
+            ->where('status_kamar', 'Tersedia')
+            ->first();
+
+        if (!$kamar) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'kamar_id' => 'Kamar tersebut sudah terisi.'
+                ]);
+        }
+
+        DB::transaction(function () use ($request, $kamar) {
+
+            $penghuni = Penghuni::create([
+                'nama' => $request->nama_penghuni,
+                'nik' => $request->nik,
+                'nomor_telepon' => $request->nomor_telepon,
+                'email' => $request->email,
+                'alamat' => $request->alamat,
+            ]);
+
+            Reservasi::create([
+                'penghuni_id' => $penghuni->id,
+                'kamar_id' => $kamar->id,
+                'tanggal_masuk' => $request->tanggal_masuk,
+                'tanggal_keluar' => $request->tanggal_keluar,
+                'status' => 'Aktif',
+            ]);
+
+            $kamar->update([
+                'status_kamar' => 'Terisi'
+            ]);
+        });
+
+        return redirect()
+            ->route('penghuni.dashboard')
+            ->with(
+                'success',
+                'Reservasi berhasil dibuat dan data penghuni berhasil disimpan.'
             );
     }
 
 
-    // =========================
-    // DETAIL
-    // =========================
     public function show(Reservasi $reservasi)
     {
-        $reservasi->load('kamar');
+        $reservasi->load(['penghuni', 'kamar']);
 
         return view(
             'pages.reservasi.show',
@@ -113,11 +161,10 @@ class ReservasiController extends Controller
     }
 
 
-    // =========================
-    // FORM EDIT
-    // =========================
     public function edit(Reservasi $reservasi)
     {
+        $reservasi->load('penghuni');
+
         $kamars = Kamar::all();
 
         return view(
@@ -130,9 +177,6 @@ class ReservasiController extends Controller
     }
 
 
-    // =========================
-    // UPDATE
-    // =========================
     public function update(
         Request $request,
         Reservasi $reservasi
@@ -142,24 +186,34 @@ class ReservasiController extends Controller
             'nik' => 'required|string|max:20',
             'nomor_telepon' => 'required|string|max:16',
             'email' => 'required|email|max:128',
-            'alamat' => 'required',
+            'alamat' => 'required|string',
             'kamar_id' => 'required|exists:kamars,id',
             'tanggal_masuk' => 'required|date',
             'tanggal_keluar' => 'nullable|date|after:tanggal_masuk',
             'status' => 'required|in:Pending,Aktif,Selesai,Dibatalkan',
         ]);
 
-        $reservasi->update([
-            'nama_penghuni' => $request->nama_penghuni,
-            'nik' => $request->nik,
-            'nomor_telepon' => $request->nomor_telepon,
-            'email' => $request->email,
-            'alamat' => $request->alamat,
-            'kamar_id' => $request->kamar_id,
-            'tanggal_masuk' => $request->tanggal_masuk,
-            'tanggal_keluar' => $request->tanggal_keluar,
-            'status' => $request->status,
-        ]);
+        DB::transaction(function () use ($request, $reservasi) {
+
+            $reservasi->load('penghuni');
+
+            if ($reservasi->penghuni) {
+                $reservasi->penghuni->update([
+                    'nama' => $request->nama_penghuni,
+                    'nik' => $request->nik,
+                    'nomor_telepon' => $request->nomor_telepon,
+                    'email' => $request->email,
+                    'alamat' => $request->alamat,
+                ]);
+            }
+
+            $reservasi->update([
+                'kamar_id' => $request->kamar_id,
+                'tanggal_masuk' => $request->tanggal_masuk,
+                'tanggal_keluar' => $request->tanggal_keluar,
+                'status' => $request->status,
+            ]);
+        });
 
         return redirect()
             ->route('admin.reservasi.index')
@@ -169,46 +223,6 @@ class ReservasiController extends Controller
             );
     }
 
-
-    // =========================
-    // FIX RESERVASI → PENGHUNI
-    // =========================
-    public function fix(Reservasi $reservasi)
-    {
-        // Cek apakah email sudah menjadi penghuni
-        $penghuni = Penghuni::where(
-            'email',
-            $reservasi->email
-        )->first();
-
-        // Kalau belum ada, buat penghuni baru
-        if (!$penghuni) {
-            Penghuni::create([
-                'nama' => $reservasi->nama_penghuni,
-                'nik' => $reservasi->nik,
-                'nomor_telepon' => $reservasi->nomor_telepon,
-                'email' => $reservasi->email,
-                'alamat' => $reservasi->alamat,
-            ]);
-        }
-
-        // Ubah status reservasi menjadi Aktif
-        $reservasi->update([
-            'status' => 'Aktif'
-        ]);
-
-        return redirect()
-            ->route('admin.reservasi.index')
-            ->with(
-                'success',
-                'Reservasi sudah FIX dan data penghuni berhasil ditambahkan.'
-            );
-    }
-
-
-    // =========================
-    // HAPUS
-    // =========================
     public function destroy(Reservasi $reservasi)
     {
         $kamar = $reservasi->kamar;

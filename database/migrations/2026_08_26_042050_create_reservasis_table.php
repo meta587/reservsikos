@@ -11,19 +11,17 @@ return new class extends Migration
         Schema::create('reservasis', function (Blueprint $table) {
             $table->id();
 
-            // DATA CALON PENGHUNI
-            $table->string('nama_penghuni', 128);
-            $table->string('nik', 20);
-            $table->string('nomor_telepon', 16);
-            $table->string('email', 128);
-            $table->text('alamat');
+            // HUBUNGAN KE PENGHUNI
+            $table->foreignId('penghuni_id')
+                ->constrained('penghunis')
+                ->cascadeOnDelete();
 
-            // DATA KAMAR
+            // HUBUNGAN KE KAMAR
             $table->foreignId('kamar_id')
                 ->constrained('kamars')
                 ->cascadeOnDelete();
 
-            // TANGGAL
+            // TANGGAL RESERVASI
             $table->date('tanggal_masuk');
             $table->date('tanggal_keluar')->nullable();
 

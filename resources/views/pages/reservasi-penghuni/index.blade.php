@@ -14,7 +14,6 @@
                 Tambah Reservasi
             </h2>
 
-
             {{-- PESAN ERROR --}}
             @if ($errors->any())
 
@@ -34,7 +33,6 @@
 
             @endif
 
-
             {{-- PESAN ERROR DARI CONTROLLER --}}
             @if (session('error'))
 
@@ -51,9 +49,7 @@
 
                 @csrf
 
-
                 <div class="row">
-
 
                     {{-- NAMA --}}
                     <div class="col-md-6 mb-4">
@@ -64,19 +60,82 @@
 
                         <input
                             type="text"
-                            name="nama"
+                            name="nama_penghuni"
                             class="form-control"
-                            value="{{ old('nama') }}"
+                            value="{{ old('nama_penghuni') }}"
                             placeholder="Masukkan nama"
                             required>
 
-                        @error('nama')
+                    </div>
 
-                            <small class="text-danger">
-                                {{ $message }}
-                            </small>
 
-                        @enderror
+                    {{-- NIK --}}
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label">
+                            NIK
+                        </label>
+
+                        <input
+                            type="text"
+                            name="nik"
+                            class="form-control"
+                            value="{{ old('nik') }}"
+                            placeholder="Masukkan NIK"
+                            required>
+
+                    </div>
+
+
+                    {{-- NOMOR TELEPON --}}
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label">
+                            Nomor Telepon
+                        </label>
+
+                        <input
+                            type="text"
+                            name="nomor_telepon"
+                            class="form-control"
+                            value="{{ old('nomor_telepon') }}"
+                            placeholder="Masukkan nomor telepon"
+                            required>
+
+                    </div>
+
+
+                    {{-- EMAIL --}}
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ old('email') }}"
+                            placeholder="Masukkan email"
+                            required>
+
+                    </div>
+
+
+                    {{-- ALAMAT --}}
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label">
+                            Alamat
+                        </label>
+
+                        <textarea
+                            name="alamat"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Masukkan alamat"
+                            required>{{ old('alamat') }}</textarea>
 
                     </div>
 
@@ -111,14 +170,6 @@
 
                         </select>
 
-                        @error('kamar_id')
-
-                            <small class="text-danger">
-                                {{ $message }}
-                            </small>
-
-                        @enderror
-
                     </div>
 
 
@@ -136,14 +187,6 @@
                             value="{{ old('tanggal_masuk') }}"
                             required>
 
-                        @error('tanggal_masuk')
-
-                            <small class="text-danger">
-                                {{ $message }}
-                            </small>
-
-                        @enderror
-
                     </div>
 
 
@@ -158,19 +201,9 @@
                             type="date"
                             name="tanggal_keluar"
                             class="form-control"
-                            value="{{ old('tanggal_keluar') }}"
-                            required>
-
-                        @error('tanggal_keluar')
-
-                            <small class="text-danger">
-                                {{ $message }}
-                            </small>
-
-                        @enderror
+                            value="{{ old('tanggal_keluar') }}">
 
                     </div>
-
 
                 </div>
 
@@ -186,7 +219,6 @@
 
                     </button>
 
-
                     <a
                         href="{{ route('penghuni.dashboard') }}"
                         class="btn btn-outline-secondary px-5">
@@ -196,7 +228,6 @@
                     </a>
 
                 </div>
-
 
             </form>
 

@@ -9,16 +9,17 @@ class Reservasi extends Model
     protected $table = 'reservasis';
 
     protected $fillable = [
-        'nama_penghuni',
-        'nik',
-        'nomor_telepon',
-        'email',
-        'alamat',
+        'penghuni_id',
         'kamar_id',
         'tanggal_masuk',
         'tanggal_keluar',
         'status',
     ];
+
+    public function penghuni()
+    {
+        return $this->belongsTo(Penghuni::class);
+    }
 
     public function kamar()
     {

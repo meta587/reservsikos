@@ -31,188 +31,191 @@
 
                 @csrf
 
-                {{-- NAMA --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">
-                        Nama
-                    </label>
+                <div class="row">
 
-                    <input
-                        type="text"
-                        name="nama_penghuni"
-                        class="form-control"
-                        value="{{ old('nama_penghuni') }}"
-                        placeholder="Masukkan nama"
-                        required
-                    >
-                </div>
+                    {{-- NAMA --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">
+                            Nama
+                        </label>
 
-
-                {{-- NIK --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">
-                        NIK
-                    </label>
-
-                    <input
-                        type="text"
-                        name="nik"
-                        class="form-control"
-                        value="{{ old('nik') }}"
-                        placeholder="Masukkan NIK"
-                        required
-                    >
-                </div>
+                        <input
+                            type="text"
+                            name="nama_penghuni"
+                            class="form-control"
+                            value="{{ old('nama_penghuni') }}"
+                            placeholder="Masukkan nama"
+                            required
+                        >
+                    </div>
 
 
-                {{-- NOMOR TELEPON --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">
-                        Nomor Telepon
-                    </label>
+                    {{-- NIK --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">
+                            NIK
+                        </label>
 
-                    <input
-                        type="text"
-                        name="nomor_telepon"
-                        class="form-control"
-                        value="{{ old('nomor_telepon') }}"
-                        placeholder="Masukkan nomor telepon"
-                        required
-                    >
-                </div>
-
-
-                {{-- EMAIL --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">
-                        Email
-                    </label>
-
-                    <input
-                        type="email"
-                        name="email"
-                        class="form-control"
-                        value="{{ old('email') }}"
-                        placeholder="Masukkan email"
-                        required
-                    >
-                </div>
+                        <input
+                            type="text"
+                            name="nik"
+                            class="form-control"
+                            value="{{ old('nik') }}"
+                            placeholder="Masukkan NIK"
+                            required
+                        >
+                    </div>
 
 
-                {{-- ALAMAT --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">
-                        Alamat
-                    </label>
+                    {{-- NOMOR TELEPON --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">
+                            Nomor Telepon
+                        </label>
 
-                    <textarea
-                        name="alamat"
-                        class="form-control"
-                        rows="3"
-                        placeholder="Masukkan alamat"
-                        required
-                    >{{ old('alamat') }}</textarea>
-                </div>
+                        <input
+                            type="text"
+                            name="nomor_telepon"
+                            class="form-control"
+                            value="{{ old('nomor_telepon') }}"
+                            placeholder="Masukkan nomor telepon"
+                            required
+                        >
+                    </div>
 
 
-                {{-- KAMAR --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">
-                        Kamar
-                    </label>
+                    {{-- EMAIL --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">
+                            Email
+                        </label>
 
-                    <select
-                        name="kamar_id"
-                        class="form-select"
-                        required
-                    >
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ old('email') }}"
+                            placeholder="Masukkan email"
+                            required
+                        >
+                    </div>
 
-                        <option value="">
-                            -- Pilih Kamar --
-                        </option>
 
-                        @foreach($kamars as $kamar)
+                    {{-- ALAMAT --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">
+                            Alamat
+                        </label>
 
-                            <option
-                                value="{{ $kamar->id }}"
-                                {{ old('kamar_id') == $kamar->id ? 'selected' : '' }}
-                            >
-                                {{ $kamar->nomor_kamar }}
-                                -
-                                {{ $kamar->tipe_kamar }}
+                        <textarea
+                            name="alamat"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Masukkan alamat"
+                            required
+                        >{{ old('alamat') }}</textarea>
+                    </div>
+
+
+                    {{-- KAMAR --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">
+                            Kamar
+                        </label>
+
+                        <select
+                            name="kamar_id"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                -- Pilih Kamar --
                             </option>
 
-                        @endforeach
+                            @foreach($kamars as $kamar)
 
-                    </select>
+                                <option
+                                    value="{{ $kamar->id }}"
+                                    {{ old('kamar_id') == $kamar->id ? 'selected' : '' }}
+                                >
+                                    {{ $kamar->nomor_kamar }}
+                                    -
+                                    {{ $kamar->tipe_kamar }}
+                                </option>
 
-                </div>
+                            @endforeach
 
-
-                {{-- TANGGAL MASUK --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">
-                        Tanggal Masuk
-                    </label>
-
-                    <input
-                        type="date"
-                        name="tanggal_masuk"
-                        class="form-control"
-                        value="{{ old('tanggal_masuk') }}"
-                        required
-                    >
-                </div>
+                        </select>
+                    </div>
 
 
-                {{-- TANGGAL KELUAR --}}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">
-                        Tanggal Keluar
-                    </label>
+                    {{-- TANGGAL MASUK --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">
+                            Tanggal Masuk
+                        </label>
 
-                    <input
-                        type="date"
-                        name="tanggal_keluar"
-                        class="form-control"
-                        value="{{ old('tanggal_keluar') }}"
-                    >
-                </div>
+                        <input
+                            type="date"
+                            name="tanggal_masuk"
+                            class="form-control"
+                            value="{{ old('tanggal_masuk') }}"
+                            required
+                        >
+                    </div>
 
 
-                {{-- STATUS --}}
-                <div class="mb-4">
-                    <label class="form-label fw-semibold">
-                        Status
-                    </label>
+                    {{-- TANGGAL KELUAR --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">
+                            Tanggal Keluar
+                        </label>
 
-                    <select
-                        name="status"
-                        class="form-select"
-                        required
-                    >
+                        <input
+                            type="date"
+                            name="tanggal_keluar"
+                            class="form-control"
+                            value="{{ old('tanggal_keluar') }}"
+                        >
+                    </div>
 
-                        <option value="Pending"
-                            {{ old('status', 'Pending') == 'Pending' ? 'selected' : '' }}>
-                            Pending
-                        </option>
 
-                        <option value="Aktif"
-                            {{ old('status') == 'Aktif' ? 'selected' : '' }}>
-                            Aktif
-                        </option>
+                    {{-- STATUS --}}
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-semibold">
+                            Status
+                        </label>
 
-                        <option value="Selesai"
-                            {{ old('status') == 'Selesai' ? 'selected' : '' }}>
-                            Selesai
-                        </option>
+                        <select
+                            name="status"
+                            class="form-select"
+                            required
+                        >
 
-                        <option value="Dibatalkan"
-                            {{ old('status') == 'Dibatalkan' ? 'selected' : '' }}>
-                            Dibatalkan
-                        </option>
+                            <option value="Pending"
+                                {{ old('status', 'Pending') == 'Pending' ? 'selected' : '' }}>
+                                Pending
+                            </option>
 
-                    </select>
+                            <option value="Aktif"
+                                {{ old('status') == 'Aktif' ? 'selected' : '' }}>
+                                Aktif
+                            </option>
+
+                            <option value="Selesai"
+                                {{ old('status') == 'Selesai' ? 'selected' : '' }}>
+                                Selesai
+                            </option>
+
+                            <option value="Dibatalkan"
+                                {{ old('status') == 'Dibatalkan' ? 'selected' : '' }}>
+                                Dibatalkan
+                            </option>
+
+                        </select>
+                    </div>
+
                 </div>
 
 
@@ -230,7 +233,7 @@
                         type="submit"
                         class="btn btn-primary"
                     >
-                        Simpan 
+                        Simpan
                     </button>
 
                 </div>

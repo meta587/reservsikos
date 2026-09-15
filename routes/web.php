@@ -12,19 +12,27 @@ use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\RegisterController;
 
 
-    // HALAMAN AWAL
-    Route::get('/', function () {
-        return redirect()->route('admin.login');
-    });
+// =====================================================
+// HALAMAN AWAL
+// =====================================================
 
-        // LOGIN ADMIN
-        Route::prefix('admin')
-            ->name('admin.')
-            ->group(function () {
+Route::get('/', function () {
+    return redirect()->route('admin.login');
+});
+
+
+// =====================================================
+// LOGIN ADMIN
+// =====================================================
+
+Route::prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
         // Halaman Login
-        Route::get('/login', function () { return view('auth.login');})
-        ->name('login');
+        Route::get('/login', function () {
+            return view('auth.login');
+        })->name('login');
 
         // Proses Login
         Route::post('/login', [AdminController::class, 'login'])
@@ -32,15 +40,30 @@ use App\Http\Controllers\RegisterController;
     });
 
 
-        // ADMIN SETELAH LOGIN
-        Route::prefix('admin')
-            ->name('admin.')
-            ->middleware('auth')
-            ->group(function () {
+// =====================================================
+// ROUTE LOGIN UMUM
+// =====================================================
+// Dibutuhkan oleh middleware auth Laravel.
+// Akan diarahkan ke halaman login admin.
+
+Route::get('/login', function () {
+    return redirect()->route('admin.login');
+})->name('login');
+
+
+// =====================================================
+// ADMIN SETELAH LOGIN
+// =====================================================
+
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware('auth')
+    ->group(function () {
 
         // DASHBOARD
         Route::get('/dashboard', [HomeController::class, 'index'])
             ->name('dashboard');
+
 
         // PROFIL
         Route::get('/profil', [ProfilController::class, 'index'])
@@ -49,21 +72,26 @@ use App\Http\Controllers\RegisterController;
         Route::post('/profil', [ProfilController::class, 'save'])
             ->name('profil.save');
 
+
         // KAMAR
         Route::resource('kamar', KamarController::class)
             ->names('kamar');
+
 
         // PENGHUNI
         Route::resource('penghuni', PenghuniController::class)
             ->names('penghuni');
 
+
         // RESERVASI
         Route::resource('reservasi', ReservasiController::class)
             ->names('reservasi');
 
+
         // PEMBAYARAN
         Route::resource('pembayaran', PembayaranController::class)
             ->names('pembayaran');
+
 
         // LOGOUT ADMIN
         Route::post('/logout', [AdminController::class, 'logout'])
@@ -71,52 +99,86 @@ use App\Http\Controllers\RegisterController;
     });
 
 
-        // REGISTER
-        Route::get('/register', [RegisterController::class, 'index'])
-            ->name('register');
+// =====================================================
+// REGISTER
+// =====================================================
 
-        Route::post('/register', [RegisterController::class, 'register'])
-            ->name('register.process');
+Route::get('/register', [RegisterController::class, 'index'])
+    ->name('register');
 
-
-        // DASHBOARD PENGHUNI
-        Route::get('/penghuni/dashboard', function () {
-
-            // Hanya menampilkan kamar yang tersedia
-            $kamars = \App\Models\Kamar::where('status_kamar', 'Tersedia')->get();
-
-            return view('penghuni.dashboard', compact('kamars'));
-
-        })->name('penghuni.dashboard');
-
-        // RESERVASI PENGHUNI
-        // Halaman form reservasi
-        Route::get('/penghuni/reservasi', function () {
-
-            // Hanya kamar yang tersedia yang bisa dipilih
-            $kamars = \App\Models\Kamar::where('status_kamar', 'Tersedia')->get();
-
-            $kamar = null;
-
-            // Jika ada kamar yang dipilih dari dashboard
-            if (request('kamar_id')) {
-                $kamar = \App\Models\Kamar::where('id', request('kamar_id'))
-                    ->where('status_kamar', 'Tersedia')
-                    ->firstOrFail();
-            }
-
-            return view(
-                'pages.reservasi-penghuni.index',
-                compact('kamars', 'kamar')
-            );
-
-        })->name('reservasi-penghuni.index');
+Route::post('/register', [RegisterController::class, 'register'])
+    ->name('register.process');
 
 
-        // Proses simpan reservasi penghuni
-        Route::post('/penghuni/reservasi', [ReservasiController::class, 'storePenghuni'])
-            ->name('reservasi-penghuni.store');
+// =====================================================
+// DASHBOARD PENGHUNI
+// =====================================================
 
-        // LOGOUT PENGHUNI
-        Route::post('/penghuni/logout', [AdminController::class, 'logout'])
-            ->name('penghuni.logout');
+Route::get('/penghuni/dashboard', function () {
+
+    // Hanya menampilkan kamar yang tersedia
+    $kamars = \App\Models\Kamar::where(
+        'status_kamar',
+        'Tersedia'
+    )->get();
+
+    return view(
+        'penghuni.dashboard',
+        compact('kamars')
+    );
+
+})->name('penghuni.dashboard');
+
+
+// =====================================================
+// RESERVASI PENGHUNI
+// =====================================================
+
+// Halaman form reservasi
+Route::get('/penghuni/reservasi', function () {
+
+    // Hanya kamar yang tersedia
+    $kamars = \App\Models\Kamar::where(
+        'status_kamar',
+        'Tersedia'
+    )->get();
+
+    $kamar = null;
+
+    // Jika ada kamar yang dipilih dari dashboard
+    if (request('kamar_id')) {
+
+        $kamar = \App\Models\Kamar::where(
+            'id',
+            request('kamar_id')
+        )
+        ->where(
+            'status_kamar',
+            'Tersedia'
+        )
+        ->firstOrFail();
+    }
+
+    return view(
+        'pages.reservasi-penghuni.index',
+        compact('kamars', 'kamar')
+    );
+
+})->name('reservasi-penghuni.index');
+
+
+// Proses simpan reservasi penghuni
+Route::post(
+    '/penghuni/reservasi',
+    [ReservasiController::class, 'storePenghuni']
+)->name('reservasi-penghuni.store');
+
+
+// =====================================================
+// LOGOUT PENGHUNI
+// =====================================================
+
+Route::post(
+    '/penghuni/logout',
+    [AdminController::class, 'logout']
+)->name('penghuni.logout');
