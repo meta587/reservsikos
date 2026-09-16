@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfilController;
@@ -22,7 +23,7 @@ Route::get('/', function () {
 
 
 // =====================================================
-// LOGIN ADMIN
+// LOGIN
 // =====================================================
 
 Route::prefix('admin')
@@ -43,8 +44,6 @@ Route::prefix('admin')
 // =====================================================
 // ROUTE LOGIN UMUM
 // =====================================================
-// Dibutuhkan oleh middleware auth Laravel.
-// Akan diarahkan ke halaman login admin.
 
 Route::get('/login', function () {
     return redirect()->route('admin.login');
@@ -57,7 +56,7 @@ Route::get('/login', function () {
 
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware('auth')
+    ->middleware('auth:admin')
     ->group(function () {
 
         // DASHBOARD
@@ -127,7 +126,8 @@ Route::get('/penghuni/dashboard', function () {
         compact('kamars')
     );
 
-})->name('penghuni.dashboard');
+})->middleware('auth:penghuni')
+  ->name('penghuni.dashboard');
 
 
 // =====================================================
@@ -164,14 +164,17 @@ Route::get('/penghuni/reservasi', function () {
         compact('kamars', 'kamar')
     );
 
-})->name('reservasi-penghuni.index');
+})->middleware('auth:penghuni')
+  ->name('reservasi-penghuni.index');
 
 
 // Proses simpan reservasi penghuni
 Route::post(
     '/penghuni/reservasi',
     [ReservasiController::class, 'storePenghuni']
-)->name('reservasi-penghuni.store');
+)
+->middleware('auth:penghuni')
+->name('reservasi-penghuni.store');
 
 
 // =====================================================
@@ -180,5 +183,7 @@ Route::post(
 
 Route::post(
     '/penghuni/logout',
-    [AdminController::class, 'logout']
-)->name('penghuni.logout');
+    [AdminController::class, 'logoutPenghuni']
+)
+->middleware('auth:penghuni')
+->name('penghuni.logout');

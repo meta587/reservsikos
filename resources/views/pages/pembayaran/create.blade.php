@@ -23,11 +23,11 @@
                     {{-- KOLOM KIRI --}}
                     <div class="col-md-6">
 
-                        {{-- RESERVASI --}}
+                        {{-- NAMA PENGHUNI --}}
                         <div class="mb-3">
 
                             <label for="reservasi_id" class="form-label">
-                                Reservasi
+                                Nama Penghuni
                             </label>
 
                             <select
@@ -36,18 +36,22 @@
                                 class="form-select">
 
                                 <option value="">
-                                    Pilih reservasi
+                                    Pilih nama penghuni
                                 </option>
 
                                 @foreach($reservasis as $reservasi)
 
-                                    <option
-                                        value="{{ $reservasi->id }}"
-                                        {{ old('reservasi_id') == $reservasi->id ? 'selected' : '' }}>
+                                    @if($reservasi->penghuni)
 
-                                        RSV-{{ str_pad($reservasi->id, 3, '0', STR_PAD_LEFT) }}
+                                        <option
+                                            value="{{ $reservasi->id }}"
+                                            {{ old('reservasi_id') == $reservasi->id ? 'selected' : '' }}>
 
-                                    </option>
+                                            {{ $reservasi->penghuni->nama }}
+
+                                        </option>
+
+                                    @endif
 
                                 @endforeach
 

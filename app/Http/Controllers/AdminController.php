@@ -9,10 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    
     // LOGIN
-    
-
     public function login(Request $request)
     {
         $request->validate([
@@ -22,6 +19,7 @@ class AdminController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
+        // JIKA EMAIL BELUM TERDAFTAR
         if (!$user) {
 
             $user = User::create([
@@ -31,7 +29,8 @@ class AdminController extends Controller
                 'role' => 'penghuni',
             ]);
 
-            Auth::login($user);
+            // LOGIN SEBAGAI PENGHUNI
+            Auth::guard('penghuni')->login($user);
 
             $request->session()->regenerate();
 
@@ -48,41 +47,54 @@ class AdminController extends Controller
                 ->withInput($request->only('email'));
         }
 
-        // LOGIN
-        Auth::login($user);
-
-        $request->session()->regenerate();
-
-        // ADMIN
+        // JIKA ADMIN
         if ($user->role === 'admin') {
+
+            Auth::guard('admin')->login($user);
+
+            $request->session()->regenerate();
+
             return redirect()->route('admin.dashboard');
         }
 
-        // PENGHUNI
+        // JIKA PENGHUNI
         if ($user->role === 'penghuni') {
+
+            Auth::guard('penghuni')->login($user);
+
+            $request->session()->regenerate();
+
             return redirect()->route('penghuni.dashboard');
         }
-
-        // ROLE TIDAK ADA
-        Auth::logout();
 
         return back()->withErrors([
             'email' => 'Role tidak ditemukan.',
         ]);
     }
-  
-    // LOGOUT
+
+
+    // LOGOUT ADMIN
     public function logout(Request $request)
     {
-        Auth::logout();
-
-        $request->session()->invalidate();
+        Auth::guard('admin')->logout();
 
         $request->session()->regenerateToken();
 
         return redirect()->route('admin.login');
     }
-    
+
+
+    // LOGOUT PENGHUNI
+    public function logoutPenghuni(Request $request)
+    {
+        Auth::guard('penghuni')->logout();
+
+        $request->session()->regenerateToken();
+
+        return redirect()->route('admin.login');
+    }
+
+
     // DATA ADMIN
     public function index()
     {
@@ -90,13 +102,16 @@ class AdminController extends Controller
 
         return view('pages.admin.index', compact('users'));
     }
-    
+
+
     // FORM TAMBAH ADMIN
     public function create()
     {
         return view('pages.admin.create');
     }
 
+
+    // SIMPAN ADMIN
     public function store(Request $request)
     {
         $request->validate([
@@ -117,6 +132,8 @@ class AdminController extends Controller
             ->with('success', 'Admin berhasil ditambahkan.');
     }
 
+
+    // DETAIL ADMIN
     public function show(string $id)
     {
         $user = User::where('role', 'admin')
@@ -125,6 +142,8 @@ class AdminController extends Controller
         return view('pages.admin.show', compact('user'));
     }
 
+
+    // FORM EDIT ADMIN
     public function edit(string $id)
     {
         $user = User::where('role', 'admin')
@@ -133,6 +152,8 @@ class AdminController extends Controller
         return view('pages.admin.edit', compact('user'));
     }
 
+
+    // UPDATE ADMIN
     public function update(Request $request, string $id)
     {
         $user = User::where('role', 'admin')
@@ -153,6 +174,8 @@ class AdminController extends Controller
             ->with('success', 'Admin berhasil diperbarui.');
     }
 
+
+    // HAPUS ADMIN
     public function destroy(string $id)
     {
         $user = User::where('role', 'admin')

@@ -63,7 +63,7 @@
                         type="button"
                         data-bs-toggle="dropdown">
 
-                        👤 {{ Auth::user()->name }}
+                        👤 {{ Auth::guard('penghuni')->user()->name }}
 
                     </button>
 
@@ -99,7 +99,8 @@
                 <div class="card-body p-4">
 
                     <h4 class="fw-bold">
-                        Selamat datang, {{ Auth::user()->name }} 👋
+                        Selamat datang,
+                        {{ Auth::guard('penghuni')->user()->name }} 👋
                     </h4>
 
                     <p class="text-secondary mb-0">

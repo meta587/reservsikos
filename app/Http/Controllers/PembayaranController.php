@@ -11,7 +11,7 @@ class PembayaranController extends Controller
     public function index()
     {
         $pembayarans = Pembayaran::with(
-            'reservasi'
+            'reservasi.penghuni'
         )->get();
 
         return view(
@@ -20,15 +20,19 @@ class PembayaranController extends Controller
         );
     }
 
+
     public function create()
     {
-        $reservasis = Reservasi::all();
+        $reservasis = Reservasi::with(
+            'penghuni'
+        )->get();
 
         return view(
             'pages.pembayaran.create',
             compact('reservasis')
         );
     }
+
 
     public function store(Request $request)
     {
@@ -50,12 +54,17 @@ class PembayaranController extends Controller
 
         return redirect()
             ->route('admin.pembayaran.index')
-            ->with('success', 'Pembayaran berhasil ditambahkan.');
+            ->with(
+                'success',
+                'Pembayaran berhasil ditambahkan.'
+            );
     }
+
+
     public function show(string $id)
     {
         $pembayaran = Pembayaran::with(
-            'reservasi'
+            'reservasi.penghuni'
         )->findOrFail($id);
 
         return view(
@@ -64,11 +73,14 @@ class PembayaranController extends Controller
         );
     }
 
+
     public function edit(string $id)
     {
         $pembayaran = Pembayaran::findOrFail($id);
 
-        $reservasis = Reservasi::all();
+        $reservasis = Reservasi::with(
+            'penghuni'
+        )->get();
 
         return view(
             'pages.pembayaran.edit',
@@ -78,6 +90,7 @@ class PembayaranController extends Controller
             )
         );
     }
+
 
     public function update(
         Request $request,
@@ -93,9 +106,13 @@ class PembayaranController extends Controller
             'status_pembayaran' => 'required',
         ]);
 
-        $pembayaran->update(
-            $request->all()
-        );
+        $pembayaran->update([
+            'reservasi_id' => $request->reservasi_id,
+            'tanggal_pembayaran' => $request->tanggal_pembayaran,
+            'jumlah_pembayaran' => $request->jumlah_pembayaran,
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'status_pembayaran' => $request->status_pembayaran,
+        ]);
 
         return redirect()
             ->route('admin.pembayaran.index')
@@ -104,6 +121,7 @@ class PembayaranController extends Controller
                 'Pembayaran berhasil diperbarui.'
             );
     }
+
 
     public function destroy(string $id)
     {

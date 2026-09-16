@@ -10,14 +10,14 @@ class ProfilController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
+        $user = Auth::guard('admin')->user();
 
         return view('pages.profil.index', compact('user'));
     }
 
     public function save(Request $request)
     {
-        $user = Auth::user();
+        $user = Auth::guard('admin')->user();
 
         $request->validate([
             'name' => 'required|string|max:255',

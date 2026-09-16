@@ -27,18 +27,33 @@
                 </tr>
 
 
+                {{-- NAMA PENGHUNI --}}
                 <tr>
+
                     <th>
-                        Reservasi
+                        Nama Penghuni
                     </th>
 
                     <td>
-                        RSV-{{ str_pad($pembayaran->reservasi_id, 3, '0', STR_PAD_LEFT) }}
+
+                        @if($pembayaran->reservasi && $pembayaran->reservasi->penghuni)
+
+                            {{ $pembayaran->reservasi->penghuni->nama }}
+
+                        @else
+
+                            -
+
+                        @endif
+
                     </td>
+
                 </tr>
 
 
+                {{-- TANGGAL PEMBAYARAN --}}
                 <tr>
+
                     <th>
                         Tanggal Pembayaran
                     </th>
@@ -46,10 +61,13 @@
                     <td>
                         {{ \Carbon\Carbon::parse($pembayaran->tanggal_pembayaran)->isoFormat('DD MMMM YYYY') }}
                     </td>
+
                 </tr>
 
 
+                {{-- JUMLAH PEMBAYARAN --}}
                 <tr>
+
                     <th>
                         Jumlah Pembayaran
                     </th>
@@ -57,10 +75,13 @@
                     <td>
                         Rp{{ number_format($pembayaran->jumlah_pembayaran, 0, ',', '.') }}
                     </td>
+
                 </tr>
 
 
+                {{-- METODE PEMBAYARAN --}}
                 <tr>
+
                     <th>
                         Metode Pembayaran
                     </th>
@@ -68,10 +89,13 @@
                     <td>
                         {{ $pembayaran->metode_pembayaran }}
                     </td>
+
                 </tr>
 
 
+                {{-- STATUS PEMBAYARAN --}}
                 <tr>
+
                     <th>
                         Status Pembayaran
                     </th>
@@ -93,10 +117,13 @@
                         @endif
 
                     </td>
+
                 </tr>
 
 
+                {{-- TERDAFTAR PADA --}}
                 <tr>
+
                     <th>
                         Terdaftar pada
                     </th>
@@ -104,10 +131,13 @@
                     <td>
                         {{ \Carbon\Carbon::parse($pembayaran->created_at)->isoFormat('DD MMMM YYYY HH:mm:ss') }}
                     </td>
+
                 </tr>
 
 
+                {{-- DIPERBARUI PADA --}}
                 <tr>
+
                     <th>
                         Diperbarui pada
                     </th>
@@ -115,6 +145,7 @@
                     <td>
                         {{ \Carbon\Carbon::parse($pembayaran->updated_at)->isoFormat('DD MMMM YYYY HH:mm:ss') }}
                     </td>
+
                 </tr>
 
             </table>
@@ -123,15 +154,17 @@
             {{-- TOMBOL --}}
             <div class="d-flex align-items-center gap-2 mt-4">
 
-                <a href="{{ route('admin.pembayaran.index') }}"
-                   class="btn btn-primary">
+                <a
+                    href="{{ route('admin.pembayaran.index') }}"
+                    class="btn btn-primary">
 
                     Kembali
 
                 </a>
 
-                <a href="{{ route('admin.pembayaran.edit', $pembayaran->id) }}"
-                   class="btn btn-secondary">
+                <a
+                    href="{{ route('admin.pembayaran.edit', $pembayaran->id) }}"
+                    class="btn btn-secondary">
 
                     Edit
 
@@ -145,8 +178,9 @@
                     @csrf
                     @method('DELETE')
 
-                    <button type="submit"
-                            class="btn btn-danger">
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
 
                         Hapus
 

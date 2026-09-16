@@ -24,12 +24,11 @@
                     {{-- KOLOM KIRI --}}
                     <div class="col-md-6">
 
-                        {{-- RESERVASI --}}
+                        {{-- NAMA PENGHUNI --}}
                         <div class="mb-3">
 
-                            <label for="reservasi_id"
-                                   class="form-label fw-semibold">
-                                Reservasi
+                            <label for="reservasi_id" class="form-label fw-semibold">
+                                Nama Penghuni
                             </label>
 
                             <select
@@ -38,18 +37,22 @@
                                 class="form-select form-select-lg">
 
                                 <option value="">
-                                    Pilih reservasi
+                                    Pilih nama penghuni
                                 </option>
 
                                 @foreach($reservasis as $reservasi)
 
-                                    <option
-                                        value="{{ $reservasi->id }}"
-                                        {{ old('reservasi_id', $pembayaran->reservasi_id) == $reservasi->id ? 'selected' : '' }}>
+                                    @if($reservasi->penghuni)
 
-                                        RSV-{{ str_pad($reservasi->id, 3, '0', STR_PAD_LEFT) }}
+                                        <option
+                                            value="{{ $reservasi->id }}"
+                                            {{ old('reservasi_id', $pembayaran->reservasi_id) == $reservasi->id ? 'selected' : '' }}>
 
-                                    </option>
+                                            {{ $reservasi->penghuni->nama }}
+
+                                        </option>
+
+                                    @endif
 
                                 @endforeach
 
@@ -67,8 +70,7 @@
                         {{-- TANGGAL PEMBAYARAN --}}
                         <div class="mb-3">
 
-                            <label for="tanggal_pembayaran"
-                                   class="form-label fw-semibold">
+                            <label for="tanggal_pembayaran" class="form-label fw-semibold">
                                 Tanggal Pembayaran
                             </label>
 
@@ -91,8 +93,7 @@
                         {{-- JUMLAH PEMBAYARAN --}}
                         <div class="mb-3">
 
-                            <label for="jumlah_pembayaran"
-                                   class="form-label fw-semibold">
+                            <label for="jumlah_pembayaran" class="form-label fw-semibold">
                                 Jumlah Pembayaran
                             </label>
 
@@ -122,8 +123,7 @@
                         {{-- METODE PEMBAYARAN --}}
                         <div class="mb-3">
 
-                            <label for="metode_pembayaran"
-                                   class="form-label fw-semibold">
+                            <label for="metode_pembayaran" class="form-label fw-semibold">
                                 Metode Pembayaran
                             </label>
 
@@ -160,8 +160,7 @@
                         {{-- STATUS PEMBAYARAN --}}
                         <div class="mb-3">
 
-                            <label for="status_pembayaran"
-                                   class="form-label fw-semibold">
+                            <label for="status_pembayaran" class="form-label fw-semibold">
                                 Status Pembayaran
                             </label>
 

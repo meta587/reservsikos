@@ -12,14 +12,14 @@
         </small>
     </div>
 
-    {{-- PROFIL --}}
+    {{-- PROFIL ADMIN --}}
     <div class="dropdown">
 
         <button class="btn btn-light dropdown-toggle"
                 type="button"
                 data-bs-toggle="dropdown">
 
-            👤 {{ Auth::user()->name }}
+            👤 {{ Auth::guard('admin')->user()->name }}
 
         </button>
 
@@ -37,7 +37,6 @@
             </li>
 
             <li>
-
                 <form method="POST"
                       action="{{ route('admin.logout') }}">
 
@@ -49,7 +48,6 @@
                     </button>
 
                 </form>
-
             </li>
 
         </ul>
