@@ -10,9 +10,9 @@ class PembayaranController extends Controller
 {
     public function index()
     {
-        $pembayarans = Pembayaran::with(
+        $pembayarans = Pembayaran::with([
             'reservasi.penghuni'
-        )->get();
+        ])->get();
 
         return view(
             'pages.pembayaran.index',
@@ -23,9 +23,9 @@ class PembayaranController extends Controller
 
     public function create()
     {
-        $reservasis = Reservasi::with(
+        $reservasis = Reservasi::with([
             'penghuni'
-        )->get();
+        ])->get();
 
         return view(
             'pages.pembayaran.create',
@@ -63,9 +63,9 @@ class PembayaranController extends Controller
 
     public function show(string $id)
     {
-        $pembayaran = Pembayaran::with(
+        $pembayaran = Pembayaran::with([
             'reservasi.penghuni'
-        )->findOrFail($id);
+        ])->findOrFail($id);
 
         return view(
             'pages.pembayaran.show',
@@ -78,9 +78,9 @@ class PembayaranController extends Controller
     {
         $pembayaran = Pembayaran::findOrFail($id);
 
-        $reservasis = Reservasi::with(
+        $reservasis = Reservasi::with([
             'penghuni'
-        )->get();
+        ])->get();
 
         return view(
             'pages.pembayaran.edit',

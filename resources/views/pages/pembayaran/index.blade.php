@@ -55,7 +55,7 @@
                         </th>
 
                         <th>
-                            Reservasi
+                            Nama Penghuni
                         </th>
 
                         <th>
@@ -95,9 +95,9 @@
                             </td>
 
 
-                            {{-- RESERVASI --}}
+                            {{-- NAMA PENGHUNI --}}
                             <td>
-                                {{ $pembayaran->reservasi_id }}
+                                {{ $pembayaran->reservasi->penghuni->nama ?? '-' }}
                             </td>
 
 
