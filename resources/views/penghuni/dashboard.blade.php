@@ -19,16 +19,28 @@
 
                 <div class="d-grid gap-2">
 
-                    {{-- Dashboard --}}
+                    {{-- DASHBOARD --}}
                     <a href="{{ route('penghuni.dashboard') }}"
                        class="btn btn-light text-primary text-start">
+
                         🏠 Dashboard
+
                     </a>
 
-                    {{-- Reservasi --}}
+                    {{-- RESERVASI --}}
                     <a href="{{ route('reservasi-penghuni.index') }}"
                        class="btn btn-primary text-white text-start">
+
                         📋 Reservasi
+
+                    </a>
+
+                    {{-- PEMBAYARAN --}}
+                    <a href="{{ route('penghuni.pembayaran') }}"
+                       class="btn btn-primary text-white text-start">
+
+                        💳 Pembayaran
+
                     </a>
 
                 </div>
@@ -45,6 +57,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
 
                 <div>
+
                     <h2 class="fw-bold mb-1">
                         Dashboard Penghuni
                     </h2>
@@ -52,6 +65,7 @@
                     <small class="text-secondary">
                         Halaman penghuni
                     </small>
+
                 </div>
 
 
@@ -70,6 +84,7 @@
                     <ul class="dropdown-menu dropdown-menu-end">
 
                         <li>
+
                             <form method="POST"
                                   action="{{ route('penghuni.logout') }}">
 
@@ -84,6 +99,7 @@
                                 </button>
 
                             </form>
+
                         </li>
 
                     </ul>
@@ -99,14 +115,18 @@
                 <div class="card-body p-4">
 
                     <h4 class="fw-bold">
+
                         Selamat datang,
                         {{ Auth::guard('penghuni')->user()->name }} 👋
+
                     </h4>
 
                     <p class="text-secondary mb-0">
+
                         Selamat datang di aplikasi Reservasi Kos.
                         Kamu dapat melihat kamar yang tersedia,
-                        melakukan reservasi.
+                        melakukan reservasi, dan melihat pembayaran.
+
                     </p>
 
                 </div>
@@ -120,7 +140,9 @@
                 <div class="card-body p-4">
 
                     <h4 class="fw-bold mb-4">
+
                         🏠 Daftar Kamar
+
                     </h4>
 
                     <div class="table-responsive">
@@ -130,6 +152,7 @@
                             <thead class="table-light">
 
                                 <tr>
+
                                     <th>No</th>
                                     <th>Nomor Kamar</th>
                                     <th>Tipe Kamar</th>
@@ -137,9 +160,11 @@
                                     <th>Fasilitas</th>
                                     <th>Status</th>
                                     <th>Reservasi</th>
+
                                 </tr>
 
                             </thead>
+
 
                             <tbody>
 
@@ -149,31 +174,41 @@
 
                                         {{-- NO --}}
                                         <td>
+
                                             {{ $loop->iteration }}
+
                                         </td>
 
 
                                         {{-- NOMOR KAMAR --}}
                                         <td>
+
                                             {{ $kamar->nomor_kamar }}
+
                                         </td>
 
 
                                         {{-- TIPE KAMAR --}}
                                         <td>
+
                                             {{ $kamar->tipe_kamar }}
+
                                         </td>
 
 
                                         {{-- HARGA --}}
                                         <td>
+
                                             Rp{{ number_format($kamar->harga, 0, ',', '.') }}
+
                                         </td>
 
 
                                         {{-- FASILITAS --}}
                                         <td>
+
                                             {{ $kamar->fasilitas }}
+
                                         </td>
 
 
@@ -183,13 +218,17 @@
                                             @if(strtolower(trim($kamar->status_kamar)) == 'tersedia')
 
                                                 <span class="badge bg-success">
+
                                                     Tersedia
+
                                                 </span>
 
                                             @else
 
                                                 <span class="badge bg-danger">
+
                                                     Terisi
+
                                                 </span>
 
                                             @endif

@@ -59,12 +59,18 @@ Route::prefix('admin')
     ->middleware('auth:admin')
     ->group(function () {
 
+        // =================================================
         // DASHBOARD
+        // =================================================
+
         Route::get('/dashboard', [HomeController::class, 'index'])
             ->name('dashboard');
 
 
+        // =================================================
         // PROFIL
+        // =================================================
+
         Route::get('/profil', [ProfilController::class, 'index'])
             ->name('profil');
 
@@ -72,27 +78,42 @@ Route::prefix('admin')
             ->name('profil.save');
 
 
+        // =================================================
         // KAMAR
+        // =================================================
+
         Route::resource('kamar', KamarController::class)
             ->names('kamar');
 
 
+        // =================================================
         // PENGHUNI
+        // =================================================
+
         Route::resource('penghuni', PenghuniController::class)
             ->names('penghuni');
 
 
+        // =================================================
         // RESERVASI
+        // =================================================
+
         Route::resource('reservasi', ReservasiController::class)
             ->names('reservasi');
 
 
-        // PEMBAYARAN
+        // =================================================
+        // PEMBAYARAN ADMIN
+        // =================================================
+
         Route::resource('pembayaran', PembayaranController::class)
             ->names('pembayaran');
 
 
+        // =================================================
         // LOGOUT ADMIN
+        // =================================================
+
         Route::post('/logout', [AdminController::class, 'logout'])
             ->name('logout');
     });
@@ -160,7 +181,7 @@ Route::get('/penghuni/reservasi', function () {
     }
 
     return view(
-        'pages.reservasi-penghuni.index',
+        'penghuni.reservasi-penghuni.index',
         compact('kamars', 'kamar')
     );
 
@@ -175,6 +196,28 @@ Route::post(
 )
 ->middleware('auth:penghuni')
 ->name('reservasi-penghuni.store');
+
+
+// =====================================================
+// PEMBAYARAN PENGHUNI
+// =====================================================
+
+// Riwayat pembayaran penghuni
+Route::get(
+    '/penghuni/pembayaran',
+    [PembayaranController::class, 'penghuni']
+)
+->middleware('auth:penghuni')
+->name('penghuni.pembayaran');
+
+
+// Detail / bukti pembayaran penghuni
+Route::get(
+    '/penghuni/pembayaran/{id}',
+    [PembayaranController::class, 'bukti']
+)
+->middleware('auth:penghuni')
+->name('penghuni.pembayaran.bukti');
 
 
 // =====================================================

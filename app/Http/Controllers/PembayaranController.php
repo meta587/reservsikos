@@ -4,10 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Pembayaran;
 use App\Models\Reservasi;
+use App\Models\Penghuni;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PembayaranController extends Controller
 {
+    // =====================================================
+    // PEMBAYARAN ADMIN
+    // =====================================================
+
     public function index()
     {
         $pembayarans = Pembayaran::with([
@@ -64,7 +70,8 @@ class PembayaranController extends Controller
     public function show(string $id)
     {
         $pembayaran = Pembayaran::with([
-            'reservasi.penghuni'
+            'reservasi.penghuni',
+            'reservasi.kamar'
         ])->findOrFail($id);
 
         return view(
@@ -135,5 +142,89 @@ class PembayaranController extends Controller
                 'success',
                 'Pembayaran berhasil dihapus.'
             );
+    }
+
+
+    // =====================================================
+    // PEMBAYARAN PENGHUNI
+    // =====================================================
+
+    public function penghuni()
+    {
+        $user = Auth::user();
+
+        // Cari data penghuni berdasarkan email akun yang login
+        $penghuni = Penghuni::where(
+            'email',
+            $user->email
+        )->first();
+
+        if (!$penghuni) {
+
+            $pembayarans = collect();
+
+        } else {
+
+            $pembayarans = Pembayaran::with([
+                'reservasi.penghuni',
+                'reservasi.kamar'
+            ])
+            ->whereHas('reservasi', function ($query) use ($penghuni) {
+
+                $query->where(
+                    'penghuni_id',
+                    $penghuni->id
+                );
+
+            })
+            ->latest('tanggal_pembayaran')
+            ->get();
+        }
+
+      return view(
+    'pages.penghuni.pembayaran-penghuni.index',
+    compact('pembayarans')
+        );
+    }
+
+
+    // =====================================================
+    // BUKTI PEMBAYARAN PENGHUNI
+    // =====================================================
+
+    public function bukti(string $id)
+    {
+        $user = Auth::user();
+
+        // Cari penghuni yang sedang login
+        $penghuni = Penghuni::where(
+            'email',
+            $user->email
+        )->first();
+
+        if (!$penghuni) {
+            abort(404);
+        }
+
+        // Ambil pembayaran yang benar-benar
+        // milik penghuni yang sedang login
+        $pembayaran = Pembayaran::with([
+            'reservasi.penghuni',
+            'reservasi.kamar'
+        ])
+        ->whereHas('reservasi', function ($query) use ($penghuni) {
+
+            $query->where(
+                'penghuni_id',
+                $penghuni->id
+            );
+
+        })
+        ->findOrFail($id);
+
+        return view(
+            'pages.penghuni.pembayaran.show',
+            compact('pembayaran')
+        );
     }
 }

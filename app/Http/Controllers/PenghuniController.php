@@ -11,13 +11,17 @@ class PenghuniController extends Controller
     {
         $penghunis = Penghuni::all();
 
-        return view('pages.penghuni.index', compact('penghunis'));
+        return view(
+            'pages.penghuni.index',
+            compact('penghunis')
+        );
     }
 
     public function create()
     {
         return view('pages.penghuni.create');
-        }
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -38,22 +42,30 @@ class PenghuniController extends Controller
 
         return redirect()
             ->route('admin.penghuni.index')
-            ->with('success', 'Data penghuni berhasil ditambahkan.');
+            ->with(
+                'success',
+                'Data penghuni berhasil ditambahkan.'
+            );
     }
-
 
     public function show(string $id)
     {
         $penghuni = Penghuni::findOrFail($id);
 
-        return view('pages.penghuni.show', compact('penghuni'));
+        return view(
+            'pages.penghuni.show',
+            compact('penghuni')
+        );
     }
 
     public function edit(string $id)
     {
         $penghuni = Penghuni::findOrFail($id);
 
-        return view('pages.penghuni.edit', compact('penghuni'));
+        return view(
+            'pages.penghuni.edit',
+            compact('penghuni')
+        );
     }
 
     public function update(Request $request, string $id)
@@ -72,17 +84,38 @@ class PenghuniController extends Controller
 
         return redirect()
             ->route('admin.penghuni.index')
-            ->with('success', 'Data penghuni berhasil diperbarui.');
+            ->with(
+                'success',
+                'Data penghuni berhasil diperbarui.'
+            );
     }
 
     public function destroy(string $id)
     {
         $penghuni = Penghuni::findOrFail($id);
 
+        // Ambil semua reservasi milik penghuni
+        $reservasis = $penghuni->reservasi;
+
+        // Kembalikan kamar menjadi tersedia
+        foreach ($reservasis as $reservasi) {
+            if ($reservasi->kamar) {
+                $reservasi->kamar->update([
+                    'status_kamar' => 'Tersedia'
+                ]);
+            }
+        }
+
+        // Hapus penghuni
+        // Reservasi dan pembayaran ikut terhapus
+        // karena cascadeOnDelete()
         $penghuni->delete();
 
         return redirect()
             ->route('admin.penghuni.index')
-            ->with('success', 'Data penghuni berhasil dihapus.');
+            ->with(
+                'success',
+                'Data penghuni berhasil dihapus dan kamar kembali tersedia.'
+            );
     }
 }
