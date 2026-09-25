@@ -35,7 +35,6 @@ class ReservasiController extends Controller
         );
     }
 
-
     public function store(Request $request)
     {
         $request->validate([
@@ -149,7 +148,6 @@ class ReservasiController extends Controller
             );
     }
 
-
     public function show(Reservasi $reservasi)
     {
         $reservasi->load(['penghuni', 'kamar']);
@@ -159,7 +157,6 @@ class ReservasiController extends Controller
             compact('reservasi')
         );
     }
-
 
     public function edit(Reservasi $reservasi)
     {
@@ -176,50 +173,35 @@ class ReservasiController extends Controller
         );
     }
 
-
-    public function update(
-        Request $request,
-        Reservasi $reservasi
-    ) {
+    public function update(Request $request, Reservasi $reservasi)
+    {
         $request->validate([
             'nama_penghuni' => 'required|string|max:128',
-            'nik' => 'required|string|max:20',
-            'nomor_telepon' => 'required|string|max:16',
-            'email' => 'required|email|max:128',
-            'alamat' => 'required|string',
             'kamar_id' => 'required|exists:kamars,id',
             'tanggal_masuk' => 'required|date',
-            'tanggal_keluar' => 'nullable|date|after:tanggal_masuk',
+            'tanggal_keluar' => 'nullable|date|after_or_equal:tanggal_masuk',
             'status' => 'required|in:Pending,Aktif,Selesai,Dibatalkan',
         ]);
 
-        DB::transaction(function () use ($request, $reservasi) {
+        $reservasi->load('penghuni');
 
-            $reservasi->load('penghuni');
+        if ($reservasi->penghuni) {
+            $reservasi->penghuni->nama = $request->nama_penghuni;
+            $reservasi->penghuni->save();
+        }
 
-            if ($reservasi->penghuni) {
-                $reservasi->penghuni->update([
-                    'nama' => $request->nama_penghuni,
-                    'nik' => $request->nik,
-                    'nomor_telepon' => $request->nomor_telepon,
-                    'email' => $request->email,
-                    'alamat' => $request->alamat,
-                ]);
-            }
+        $reservasi->kamar_id = $request->kamar_id;
+        $reservasi->tanggal_masuk = $request->tanggal_masuk;
+        $reservasi->tanggal_keluar = $request->tanggal_keluar;
+        $reservasi->status = $request->status;
 
-            $reservasi->update([
-                'kamar_id' => $request->kamar_id,
-                'tanggal_masuk' => $request->tanggal_masuk,
-                'tanggal_keluar' => $request->tanggal_keluar,
-                'status' => $request->status,
-            ]);
-        });
+        $reservasi->save();
 
         return redirect()
             ->route('admin.reservasi.index')
             ->with(
                 'success',
-                'Data reservasi berhasil diperbarui.'
+                'Reservasi berhasil diperbarui.'
             );
     }
 

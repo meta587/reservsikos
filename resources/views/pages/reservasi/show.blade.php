@@ -1,4 +1,3 @@
-```blade
 @extends('layouts.auth')
 
 @section('title', 'Detail Reservasi | Reservasi Kos')
@@ -23,7 +22,7 @@
                 </tr>
 
                 <tr>
-                    <th>Penghuni</th>
+                    <th>Nama Penghuni</th>
                     <td>
                         {{ $reservasi->penghuni->nama ?? '-' }}
                     </td>
@@ -39,7 +38,9 @@
                 <tr>
                     <th>Tanggal Masuk</th>
                     <td>
-                        {{ \Carbon\Carbon::parse($reservasi->tanggal_masuk)->isoFormat('DD MMMM YYYY') }}
+                        {{ $reservasi->tanggal_masuk
+                            ? \Carbon\Carbon::parse($reservasi->tanggal_masuk)->isoFormat('DD MMMM YYYY')
+                            : '-' }}
                     </td>
                 </tr>
 
@@ -55,37 +56,42 @@
                 <tr>
                     <th>Status</th>
                     <td>
-                        {{ ucfirst($reservasi->status) }}
+                        {{ $reservasi->status }}
                     </td>
                 </tr>
 
                 <tr>
                     <th>Terdaftar pada</th>
                     <td>
-                        {{ \Carbon\Carbon::parse($reservasi->created_at)->isoFormat('DD MMMM YYYY HH:mm:ss') }}
+                        {{ $reservasi->created_at
+                            ? \Carbon\Carbon::parse($reservasi->created_at)->isoFormat('DD MMMM YYYY HH:mm:ss')
+                            : '-' }}
                     </td>
                 </tr>
 
                 <tr>
                     <th>Diperbarui pada</th>
                     <td>
-                        {{ \Carbon\Carbon::parse($reservasi->updated_at)->isoFormat('DD MMMM YYYY HH:mm:ss') }}
+                        {{ $reservasi->updated_at
+                            ? \Carbon\Carbon::parse($reservasi->updated_at)->isoFormat('DD MMMM YYYY HH:mm:ss')
+                            : '-' }}
                     </td>
                 </tr>
 
             </table>
 
-
             {{-- TOMBOL --}}
             <div class="d-flex align-items-center gap-2 mt-4">
 
-                <a href="{{ route('admin.reservasi.index') }}"
-                   class="btn btn-primary">
+                <a
+                    href="{{ route('admin.reservasi.index') }}"
+                    class="btn btn-primary">
                     Kembali
                 </a>
 
-                <a href="{{ route('admin.reservasi.edit', $reservasi->id) }}"
-                   class="btn btn-secondary">
+                <a
+                    href="{{ route('admin.reservasi.edit', $reservasi->id) }}"
+                    class="btn btn-secondary">
                     Edit
                 </a>
 
@@ -97,7 +103,9 @@
                     @csrf
                     @method('DELETE')
 
-                    <button type="submit" class="btn btn-danger">
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
                         Hapus
                     </button>
 
@@ -112,4 +120,3 @@
 </div>
 
 @endsection
-```

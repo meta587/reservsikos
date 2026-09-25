@@ -182,7 +182,7 @@ class PembayaranController extends Controller
         }
 
       return view(
-    'pages.penghuni.pembayaran-penghuni.index',
+    'penghuni.pembayaran-penghuni.index',
     compact('pembayarans')
         );
     }

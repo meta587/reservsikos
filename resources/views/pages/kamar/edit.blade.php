@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Edit Kamar  Reservasi Kos')
+@section('title', 'Edit Kamar Reservasi Kos')
 
 @section('content')
 
@@ -21,14 +21,13 @@
 
                 <div class="row g-4">
 
-                    {{-- KOLOM KIRI --}}
+                    {{-- BAGIAN KIRI --}}
                     <div class="col-md-6">
 
                         {{-- NOMOR KAMAR --}}
                         <div class="mb-3">
 
-                            <label for="nomor_kamar"
-                                   class="form-label fw-semibold">
+                            <label for="nomor_kamar" class="form-label fw-semibold">
                                 Nomor Kamar
                             </label>
 
@@ -38,7 +37,8 @@
                                 name="nomor_kamar"
                                 class="form-control form-control-lg"
                                 value="{{ old('nomor_kamar', $kamar->nomor_kamar) }}"
-                                placeholder="Masukkan nomor kamar">
+                                placeholder="Masukkan nomor kamar"
+                            >
 
                             @error('nomor_kamar')
                                 <small class="text-danger">
@@ -52,33 +52,32 @@
                         {{-- TIPE KAMAR --}}
                         <div class="mb-3">
 
-                            <label for="tipe_kamar"
-                                   class="form-label fw-semibold">
+                            <label for="tipe_kamar" class="form-label fw-semibold">
                                 Tipe Kamar
                             </label>
 
                             <select
                                 id="tipe_kamar"
                                 name="tipe_kamar"
-                                class="form-select form-select-lg">
+                                class="form-select form-select-lg"
+                            >
 
                                 <option value="">
                                     Pilih tipe kamar
                                 </option>
 
-                                <option value="Standard"
-                                    {{ old('tipe_kamar', $kamar->tipe_kamar) == 'Standard' ? 'selected' : '' }}>
+                                <option
+                                    value="Standard"
+                                    {{ old('tipe_kamar', $kamar->tipe_kamar) == 'Standard' ? 'selected' : '' }}
+                                >
                                     Standard
                                 </option>
 
-                                <option value="Deluxe"
-                                    {{ old('tipe_kamar', $kamar->tipe_kamar) == 'Deluxe' ? 'selected' : '' }}>
+                                <option
+                                    value="Deluxe"
+                                    {{ old('tipe_kamar', $kamar->tipe_kamar) == 'Deluxe' ? 'selected' : '' }}
+                                >
                                     Deluxe
-                                </option>
-
-                                <option value="VIP"
-                                    {{ old('tipe_kamar', $kamar->tipe_kamar) == 'VIP' ? 'selected' : '' }}>
-                                    VIP
                                 </option>
 
                             </select>
@@ -95,8 +94,7 @@
                         {{-- HARGA --}}
                         <div class="mb-3">
 
-                            <label for="harga"
-                                   class="form-label fw-semibold">
+                            <label for="harga" class="form-label fw-semibold">
                                 Harga
                             </label>
 
@@ -107,7 +105,8 @@
                                 class="form-control form-control-lg"
                                 value="{{ old('harga', $kamar->harga) }}"
                                 min="0"
-                                placeholder="0">
+                                placeholder="0"
+                            >
 
                             @error('harga')
                                 <small class="text-danger">
@@ -120,23 +119,25 @@
                     </div>
 
 
-                    {{-- KOLOM KANAN --}}
+                    {{-- BAGIAN KANAN --}}
                     <div class="col-md-6">
 
                         {{-- FASILITAS --}}
                         <div class="mb-3">
 
-                            <label for="fasilitas"
-                                   class="form-label fw-semibold">
+                            <label for="fasilitas" class="form-label fw-semibold">
                                 Fasilitas
                             </label>
 
-                            <textarea
+                            <input
+                                type="text"
                                 id="fasilitas"
                                 name="fasilitas"
-                                rows="4"
-                                class="form-control"
-                                placeholder="Masukkan fasilitas">{{ old('fasilitas', $kamar->fasilitas) }}</textarea>
+                                class="form-control form-control-lg"
+                                value="{{ old('fasilitas', $kamar->fasilitas) }}"
+                                placeholder="Pilih tipe kamar terlebih dahulu"
+                                readonly
+                            >
 
                             @error('fasilitas')
                                 <small class="text-danger">
@@ -150,27 +151,31 @@
                         {{-- STATUS --}}
                         <div class="mb-3">
 
-                            <label for="status_kamar"
-                                   class="form-label fw-semibold">
+                            <label for="status_kamar" class="form-label fw-semibold">
                                 Status
                             </label>
 
                             <select
                                 id="status_kamar"
                                 name="status_kamar"
-                                class="form-select form-select-lg">
+                                class="form-select form-select-lg"
+                            >
 
                                 <option value="">
                                     Pilih status
                                 </option>
 
-                                <option value="Tersedia"
-                                    {{ old('status_kamar', $kamar->status_kamar) == 'Tersedia' ? 'selected' : '' }}>
+                                <option
+                                    value="Tersedia"
+                                    {{ old('status_kamar', $kamar->status_kamar) == 'Tersedia' ? 'selected' : '' }}
+                                >
                                     Tersedia
                                 </option>
 
-                                <option value="Terisi"
-                                    {{ old('status_kamar', $kamar->status_kamar) == 'Terisi' ? 'selected' : '' }}>
+                                <option
+                                    value="Terisi"
+                                    {{ old('status_kamar', $kamar->status_kamar) == 'Terisi' ? 'selected' : '' }}
+                                >
                                     Terisi
                                 </option>
 
@@ -194,18 +199,16 @@
 
                     <button
                         type="submit"
-                        class="btn btn-primary px-5 py-2">
-
+                        class="btn btn-primary px-5 py-2"
+                    >
                         Simpan
-
                     </button>
 
                     <a
                         href="{{ route('admin.kamar.index') }}"
-                        class="btn btn-outline-secondary px-5 py-2">
-
+                        class="btn btn-outline-secondary px-5 py-2"
+                    >
                         Batal
-
                     </a>
 
                 </div>
@@ -217,5 +220,31 @@
     </div>
 
 </div>
+
+
+{{-- OTOMATIS MENGISI FASILITAS --}}
+<script>
+
+    document.getElementById('tipe_kamar').addEventListener('change', function () {
+
+        const fasilitas = document.getElementById('fasilitas');
+
+        if (this.value === 'Standard') {
+
+            fasilitas.value = 'Kasur, Kamar, WC Luar, Lemari';
+
+        } else if (this.value === 'Deluxe') {
+
+            fasilitas.value = 'AC, TV, Lemari, Kasur';
+
+        } else {
+
+            fasilitas.value = '';
+
+        }
+
+    });
+
+</script>
 
 @endsection

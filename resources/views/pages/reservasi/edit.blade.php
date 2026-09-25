@@ -140,20 +140,26 @@
                             class="form-select form-select-lg">
 
                             <option
-                                value="aktif"
-                                {{ old('status', $reservasi->status) == 'aktif' ? 'selected' : '' }}>
+                                value="Pending"
+                                {{ old('status', $reservasi->status) == 'Pending' ? 'selected' : '' }}>
+                                Pending
+                            </option>
+
+                            <option
+                                value="Aktif"
+                                {{ old('status', $reservasi->status) == 'Aktif' ? 'selected' : '' }}>
                                 Aktif
                             </option>
 
                             <option
-                                value="selesai"
-                                {{ old('status', $reservasi->status) == 'selesai' ? 'selected' : '' }}>
+                                value="Selesai"
+                                {{ old('status', $reservasi->status) == 'Selesai' ? 'selected' : '' }}>
                                 Selesai
                             </option>
 
                             <option
-                                value="dibatalkan"
-                                {{ old('status', $reservasi->status) == 'dibatalkan' ? 'selected' : '' }}>
+                                value="Dibatalkan"
+                                {{ old('status', $reservasi->status) == 'Dibatalkan' ? 'selected' : '' }}>
                                 Dibatalkan
                             </option>
 
