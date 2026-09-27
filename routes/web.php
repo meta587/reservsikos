@@ -10,7 +10,6 @@ use App\Http\Controllers\KamarController;
 use App\Http\Controllers\PenghuniController;
 use App\Http\Controllers\ReservasiController;
 use App\Http\Controllers\PembayaranController;
-use App\Http\Controllers\RegisterController;
 
 
 // =====================================================
@@ -117,17 +116,6 @@ Route::prefix('admin')
         Route::post('/logout', [AdminController::class, 'logout'])
             ->name('logout');
     });
-
-
-// =====================================================
-// REGISTER
-// =====================================================
-
-Route::get('/register', [RegisterController::class, 'index'])
-    ->name('register');
-
-Route::post('/register', [RegisterController::class, 'register'])
-    ->name('register.process');
 
 
 // =====================================================
